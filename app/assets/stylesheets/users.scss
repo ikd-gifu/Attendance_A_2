@@ -5,6 +5,13 @@
   text-align: center;
 }
 
+/* ユーザー情報下ボタン */
+
+.btn-users-show {
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
 /* ユーザー勤怠情報テーブル */
 
 #table-attendances {
@@ -51,6 +58,6 @@
 }
 
 .btn-basic-info {
-  margin-top: 15px 0;
+  margin: 15px 0;
   width: 30%;
 }
