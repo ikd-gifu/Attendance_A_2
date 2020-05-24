@@ -11,10 +11,20 @@ class UsersController < ApplicationController
 
   #CSVインポート
   def import
-    User.import(params[:file])
-    redirect_to root_url
+    if params[:file].blank?
+      flash[:danger] = "インポートするCSVファイルを選択してください。"
+      redirect_to users_url
+    # elsif
+      # File.extname(params[:csv_file].original_filename) != ".csv"
+      # flash[:danger] = "csvファイルのみ読み込み可能です。"
+      # redirect_to users_url
+    else
+      User.import(params[:file])
+      flash[:success] = "CSVファイルをインポートしました。"
+      redirect_to root_url
+    end
   end
-
+  
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
   end
