@@ -14,10 +14,10 @@ class UsersController < ApplicationController
     if params[:file].blank?
       flash[:danger] = "インポートするCSVファイルを選択してください。"
       redirect_to users_url
-    # elsif
-      # File.extname(params[:csv_file].original_filename) != ".csv"
-      # flash[:danger] = "csvファイルのみ読み込み可能です。"
-      # redirect_to users_url
+    elsif
+      File.extname(params[:file].original_filename) != ".csv"
+      flash[:danger] = "csvファイルのみ読み込み可能です。"
+      redirect_to users_url
     else
       User.import(params[:file])
       flash[:success] = "CSVファイルをインポートしました。"
