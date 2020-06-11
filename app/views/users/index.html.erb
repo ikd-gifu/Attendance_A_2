@@ -17,6 +17,7 @@
 <div class="col-md-10 col-md-offset-1">
   <table class="table table-condensed table-hover" id="table-users">
     <% @users.each do |user| %>
+    <% @user = user %>
       <tr>
         <td><%= user.name %></br>
           <% if current_user.admin? && !current_user?(user) %>
@@ -32,7 +33,7 @@
                 
                 <div id="collapse<%= user.id %>" class="panel-collapse collapse">
                   <ul class="list-group">
-                    <%= render 'users/user', locals: { user: user } %>
+                    <%= render 'users/user', locals: { user: @user } %>
                   </ul>
                 </div>
               </div>
