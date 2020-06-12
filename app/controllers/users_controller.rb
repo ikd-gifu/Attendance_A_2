@@ -65,7 +65,7 @@ class UsersController < ApplicationController
   def edit_basic_info
   end
 
-  def update_basic_info
+  def update_basic_info #_user.html.erbからここへ飛ぶ　更新しフラッシュ表示　一覧に戻る
     if @user.update_attributes(basic_info_params)
       flash[:success] = "#{@user.name}の基本情報を更新しました。"
     else
