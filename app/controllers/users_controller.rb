@@ -21,7 +21,7 @@ class UsersController < ApplicationController
     else
       User.import(params[:file])
       flash[:success] = "CSVファイルをインポートしました。"
-      redirect_to root_url
+      redirect_to users_url
     end
   end
   

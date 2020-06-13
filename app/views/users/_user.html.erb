@@ -1,6 +1,6 @@
-<%= form_with(model: @user, url: update_basic_info_user_path(@user), local: true) do |f| %>
+<%= form_with(model: @user, url: update_basic_info_user_path(@user), local: true, method: :patch) do |f| %>
 <!--update_basic_infoに飛ばして更新及びフラッシュを表示し、一覧に戻る-->
-  <%= render 'shared/user_error_messages', object: @user %>
+  <%= render 'shared/error_messages', object: @user %>
 
   <%= f.label :name, class: "label-#{yield(:class_text)}" %>
   <%= f.text_field :name, class: "form-control" %>
