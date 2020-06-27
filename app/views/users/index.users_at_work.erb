@@ -2,19 +2,6 @@
 <% provide(:button_text, '編集する') %>
 <h1>ユーザー一覧</h1>
 
-<div class="csv_holder">
-  <%= form_tag import_users_path, method: :post, multipart: true do |f| %>
-    <div class="search_item">
-      <%= submit_tag 'ファイル選択', class: %i(csv_input_btn), type: 'button', onclick: "$('#file_input').click();" %>
-      <%= text_field_tag 'filename',"", id: "filename", disabled: true %>
-      <%= file_field_tag :file, id: "file_input", style: "display: none;", onchange: "file_selected($(this));" %>
-    </div>
-    <div>
-      <%= submit_tag "CSVインポート", class: "btn btn-primary" %>
-    </div>
-  <% end %>
-</div>
-
 <div class="col-md-10 col-md-offset-1">
   <%= will_paginate %>
     <div class="col-md-10 col-md-offset-1">
