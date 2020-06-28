@@ -1,18 +1,23 @@
-<% provide(:title, 'All Users') %>
-<% provide(:button_text, '編集する') %>
+<% provide(:title, 'Users at work') %>
 <h1>出勤中社員一覧</h1>
 
 <div class="col-md-10 col-md-offset-1">
-    <div class="col-md-10 col-md-offset-1">
       <table class="table table-condensed table-hover" id="table-users">
+        <thead>
+            <tr>
+            <td>社員番号</br>
+            <td>名前</td>
+          </tr>
+        </thead>
         <% @users.each do |user| %>
-        <% @user = user %>
-        <!-- @userを定義 userを受け取る-->
           <tr>
-            <td><%= user.name %></br>
-            </td>
+            <% user.attendances.each do |day| %>
+              <% if day.started_at.present? && day.finished_at.nil? %>
+                <td><%= user.employee_number %></td>
+                <td><%= user.name %></td>
+              <% end %>
+            <% end %>
           </tr>
         <% end %>
       </table>
-    </div>
 </div>
