@@ -6,7 +6,7 @@
         <li><%= link_to "トップへ", root_path %></li>
         <% if logged_in? %>
           <li><%= link_to "ユーザー一覧", users_path %></li>
-          <li><%= link_to "出勤中社員一覧", users_path %></li>
+          <li><%= link_to "出勤中社員一覧", users_at_work_user_path(current_user) %></li>
           <li><%= link_to "拠点情報の修正", users_path %></li>
           <li><%= link_to "基本情報の修正", users_path %></li>
           <li class="dropdown">
