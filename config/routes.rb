@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  get 'bases/new'
 
   root 'static_pages#top'
   get '/signup', to: 'users#new'
@@ -7,6 +6,8 @@ Rails.application.routes.draw do
   get    '/login', to: 'sessions#new'
   post   '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
+
+  resources :bases
 
   resources :users do
     collection {post :import} #csvインポート用ルーティング
