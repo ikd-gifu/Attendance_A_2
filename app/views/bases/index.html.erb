@@ -1,0 +1,28 @@
+<% provide(:title, 'All Bases') %>
+<% provide(:button_text, '編集する') %>
+<h1>拠点一覧</h1>
+
+<div class="col-md-10 col-md-offset-1">
+  <table class="table table-bordered table-condensed table-hover" id="table-users">
+    <thead>
+      <tr>
+        <th></th>
+        <th></th>
+        <th>拠点番号</th>
+        <th>拠点名</th>
+        <th>拠点種類</th>
+      </tr>
+    </thead>
+    <% @bases.each do |base| %>
+      <tbody>
+        <th></th>
+        <th><%= link_to "削除", base, method: :delete, class: "btn btn-md btn-primary",
+                data: { confirm:"削除してよろしいですか？" } %>
+        </th>
+        <th><%= base.id %></th>
+        <th><%= base.base_name %></th>
+        <th><%= base.attendance_type %></th>
+      </tbody>
+    <% end %>
+  </table>
+</div>

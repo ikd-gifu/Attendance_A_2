@@ -28,4 +28,4 @@ ja:
         user: ユーザーID
       base:
         base_name: 拠点名
-        attendance_type: 勤怠種類
+        attendance_type: 拠点種類

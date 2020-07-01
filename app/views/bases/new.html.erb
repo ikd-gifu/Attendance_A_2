@@ -4,6 +4,8 @@
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
     <%= form_with(model: @base, local: true) do |f| %>
+      <% render 'shared/base_error_messages', object: @base %>
+
       <%= f.label :base_name, class: "label-signup" %>
       <%= f.text_field :base_name, class: "form-control" %>
 
