@@ -8,21 +8,33 @@
       <tr>
         <th></th>
         <th></th>
-        <th>拠点番号</th>
-        <th>拠点名</th>
-        <th>拠点種類</th>
+        <th class="center">拠点番号</th>
+        <th class="center">拠点名</th>
+        <th class="center">拠点種類</th>
       </tr>
     </thead>
     <% @bases.each do |base| %>
       <tbody>
-        <th></th>
-        <th><%= link_to "削除", base, method: :delete, class: "btn btn-md btn-primary",
+        <th><%= link_to "修正", edit_basis_path(base), remote: true, class: "btn btn-md btn-primary" %></th>
+        <th class="center"><%= link_to "削除", base, method: :delete, class: "btn btn-md btn-primary",
                 data: { confirm:"削除してよろしいですか？" } %>
         </th>
-        <th><%= base.id %></th>
-        <th><%= base.base_name %></th>
-        <th><%= base.attendance_type %></th>
+        <th class="center"><%= base.id %></th>
+        <th class="center"><%= base.base_name %></th>
+        <th class="center"><%= base.attendance_type %></th>
       </tbody>
     <% end %>
   </table>
+  <table class="table table-bordered table-condensed table-hover" id="table-users">
+    <tbody>
+      <tr>
+        <th>
+          <%= link_to "拠点情報追加", new_basis_path, class: "btn btn-md btn-primary" %>
+        </th>
+      </tr>
+    </body>
+  </table>
 </div>
+
+<!--モーダルウインドウ表示-->
+<div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

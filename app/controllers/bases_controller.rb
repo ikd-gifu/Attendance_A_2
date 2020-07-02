@@ -1,4 +1,6 @@
 class BasesController < ApplicationController
+  before_action :logged_in_user
+  before_action :admin_user
   
   def new
     @base = Base.new
@@ -15,6 +17,20 @@ class BasesController < ApplicationController
       redirect_to bases_path
     else
       render :new
+    end
+  end
+  
+  def edit
+    @base = Base.find(params[:id])
+  end
+  
+  def update
+    @base = Base.find(params[:id])
+    if @base.update_attributes(base_params)
+      flash[:success] = "拠点情報を修正しました。"
+      redirect_to bases_path
+    else
+      render :edit
     end
   end
   

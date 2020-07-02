@@ -1,0 +1,18 @@
+<% provide(:title, "Edit") %>
+<h1>拠点情報編集</h1>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_with(model: @base, local: true) do |f| %>
+      <% render 'shared/base_error_messages', object: @base %>
+
+      <%= f.label :base_name, class: "label-user--edit" %>
+      <%= f.text_field :base_name, class: "form-control" %>
+
+      <%= f.label :attendance_type, class: "label-user--edit" %>
+      <%= f.text_field :attendance_type, class: "form-control" %>
+
+      <%= f.submit "修正", class: "btn btn-primary btn-block btn-user--edit" %>
+    <% end %>
+  </div>
+</div>
