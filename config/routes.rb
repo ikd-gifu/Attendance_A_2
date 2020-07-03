@@ -7,7 +7,11 @@ Rails.application.routes.draw do
   post   '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
 
-  resources :bases
+  resources :bases do
+    member do
+      get 'edit_system_info'
+    end
+  end
 
   resources :users do
     collection {post :import} #csvインポート用ルーティング

@@ -3,6 +3,7 @@
 <h1>拠点一覧</h1>
 
 <div class="col-md-10 col-md-offset-1">
+  <%= will_paginate %>
   <table class="table table-bordered table-condensed table-hover" id="table-users">
     <thead>
       <tr>
@@ -25,11 +26,14 @@
       </tbody>
     <% end %>
   </table>
+  <%= will_paginate %>
+</div>
+<div class="col-md-10 col-md-offset-1">
   <table class="table table-bordered table-condensed table-hover" id="table-users">
     <tbody>
       <tr>
         <th>
-          <%= link_to "拠点情報追加", new_basis_path, class: "btn btn-md btn-primary" %>
+          <%= link_to "拠点情報追加", new_basis_path, remote: true, class: "btn btn-md btn-primary" %>
         </th>
       </tr>
     </body>
@@ -38,3 +42,4 @@
 
 <!--モーダルウインドウ表示-->
 <div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="new" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

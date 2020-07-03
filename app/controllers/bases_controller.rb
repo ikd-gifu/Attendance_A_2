@@ -7,7 +7,7 @@ class BasesController < ApplicationController
   end
   
   def index
-    @bases = Base.paginate(page: params[:page])
+    @bases = Base.paginate(page: params[:page], per_page: 3)
   end
   
   def create
@@ -32,6 +32,10 @@ class BasesController < ApplicationController
     else
       render :edit
     end
+  end
+  
+  def edit_system_info
+    @base = Base.find(params[:id])
   end
   
   private

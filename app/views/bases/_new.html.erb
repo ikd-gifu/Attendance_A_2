@@ -1,4 +1,4 @@
-<% provide(:title, "Edit") %>
+<% provide(:title, 'Sign up') %>
 
 <div class="modal-dialog modal-md modal-dialog-center">
   <div class="modal-content">
@@ -6,7 +6,7 @@
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
-      <h1 class="modal-title">拠点情報編集</h1>
+      <h1 class="modal-title">拠点情報追加</h1>
     </div>
     <div class="modal-body">
       <div class="row">
@@ -14,14 +14,14 @@
           <%= form_with(model: @base, local: true) do |f| %>
             <% render 'shared/base_error_messages', object: @base %>
       
-            <%= f.label :base_name, class: "label-user--edit" %>
+            <%= f.label :base_name, class: "label-signup" %>
             <%= f.text_field :base_name, class: "form-control" %>
       
-            <%= f.label :attendance_type, class: "label-user--edit" %>
+            <%= f.label :attendance_type, class: "label-signup" %>
             <%= f.text_field :attendance_type, class: "form-control" %>
       
             <div class="center">
-              <%= f.submit "修正", class: "btn btn-primary btn-basic-info" %>
+              <%= f.submit "追加", class: "btn btn-primary btn-basic-info" %>
               <button type="button" class="btn btn-default btn-basic-info" data-dismiss="modal">
                 キャンセル
               </button>
