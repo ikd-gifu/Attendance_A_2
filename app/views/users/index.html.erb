@@ -23,7 +23,7 @@
         <% @user = user %>
         <!-- @userを定義 userを受け取る-->
           <tr>
-            <td><%= user.name %></br>
+            <td><%= user.name if !current_user?(user) %></br>
               <% if current_user.admin? && !current_user?(user) %>
                 <%= link_to "削除", user, method: :delete, class: "btn btn-md btn-primary",
                     data: { confirm:"削除してよろしいですか？" } %></br>

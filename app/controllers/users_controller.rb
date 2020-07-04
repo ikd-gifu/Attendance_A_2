@@ -26,7 +26,12 @@ class UsersController < ApplicationController
   end
   
   def show
-    @worked_sum = @attendances.where.not(started_at: nil).count
+    if current_user.admin?
+      flash[:danger] = '権限がありません'
+      redirect_to root_url
+    else
+      @worked_sum = @attendances.where.not(started_at: nil).count
+    end
   end
 
   def new
