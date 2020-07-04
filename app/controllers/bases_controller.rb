@@ -13,10 +13,11 @@ class BasesController < ApplicationController
   def create
     @base = Base.new(base_params)
     if @base.save
-      flash[:success] = '新規作成に成功しました。'
+      flash[:success] = '拠点情報追加に成功しました。'
       redirect_to bases_path
     else
-      render :new
+      flash[:danger] = '拠点情報追加に失敗しました。'
+      redirect_to bases_path
     end
   end
   
@@ -30,12 +31,12 @@ class BasesController < ApplicationController
       flash[:success] = "拠点情報を修正しました。"
       redirect_to bases_path
     else
-      render :edit
+      flash[:danger] = '拠点情報修正に失敗しました。'
+      redirect_to bases_path
     end
   end
   
   def edit_system_info
-    @base = Base.find(params[:id])
   end
   
   private
