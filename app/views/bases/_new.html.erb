@@ -14,6 +14,9 @@
           <%= form_with(model: @base, local: true) do |f| %>
             <% render 'shared/base_error_messages', object: @base %>
       
+            <%= f.label :base_number, class: "label-signup" %>
+            <%= f.text_field :base_number, class: "form-control" %>
+      
             <%= f.label :base_name, class: "label-signup" %>
             <%= f.text_field :base_name, class: "form-control" %>
       

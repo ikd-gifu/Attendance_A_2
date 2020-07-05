@@ -49,7 +49,7 @@ class BasesController < ApplicationController
   private
   
     def base_params
-      params.require(:base).permit(:base_name, :attendance_type)
+      params.require(:base).permit(:base_number, :base_name, :attendance_type)
     end
     
 end

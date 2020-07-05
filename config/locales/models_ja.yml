@@ -27,5 +27,6 @@ ja:
         note: 備考
         user: ユーザーID
       base:
+        base_number: 拠点番号
         base_name: 拠点名
         attendance_type: 拠点種類
