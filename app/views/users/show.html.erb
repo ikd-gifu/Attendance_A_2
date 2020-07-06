@@ -33,6 +33,14 @@
 </div>
 
 <div>
+  <% if current_user.superior? %>
+    <td>【所属長承認申請のお知らせ】</td>
+    <td>【勤怠変更申請のお知らせ】</td>
+    <td>【残業申請のお知らせ】</td>
+  <% end %>
+</div>
+
+<div>
   <table class="table table-bordered table-condensed table-hover" id="table-attendances">
     <thead>
       <tr>
@@ -70,13 +78,20 @@
           <td><%= link_to "残業申請", user_path(date: @first_day.next_month), class: "btn btn-primary" %></td>
           <td><%= l(day.worked_on, format: :short) %></td>
           <td><%= $days_of_the_week[day.worked_on.wday] %></td>
+          <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
+          <td><%= l(day.started_at, format: :minute) if day.started_at.present? %></td>
           <td>
-            <% if btn_text = attendance_state(day) %>
-              <%= link_to "#{btn_text}登録", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
+            <% if btn_text = attendance_state(day) && !day.started_at.present? %>
+              <%= link_to "出社", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
             <% end %>
           </td>
-          <td><%= l(day.started_at, format: :time) if day.started_at.present? %></td>
-          <td><%= l(day.finished_at, format: :time) if day.finished_at.present? %></td>
+          <td><%= l(day.finished_at, format: :hour) if day.finished_at.present? %></td>
+          <td><%= l(day.finished_at, format: :minute) if day.finished_at.present? %></td>
+          <td>
+            <% if btn_text = attendance_state(day) && day.started_at.present? %>
+              <%= link_to "退社", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
+            <% end %>
+          </td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
               <%= str_times = working_times(day.started_at, day.finished_at) %>
@@ -84,9 +99,6 @@
             <% end %>
           </td>
           <td><%= day.note %></td>
-          <td></td>
-          <td></td>
-          <td></td>
           <td></td>
           <td></td>
           <td></td>
