@@ -26,18 +26,18 @@
   </table>
 </div>
 
+<div>
+  <% if current_user.superior? %>
+    <p>【所属長承認申請のお知らせ】</p>
+    <p>【勤怠変更申請のお知らせ】</p>
+    <p>【残業申請のお知らせ】</p>
+  <% end %>
+</div>
+
 <div class="btn-users-show">
   <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %>
   <%= link_to "CSV出力", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %><br>
   <%= link_to "勤怠修正ログ（承認済）", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %>
-</div>
-
-<div>
-  <% if current_user.superior? %>
-    <td>【所属長承認申請のお知らせ】</td>
-    <td>【勤怠変更申請のお知らせ】</td>
-    <td>【残業申請のお知らせ】</td>
-  <% end %>
 </div>
 
 <div>
@@ -115,7 +115,13 @@
         <td colspan="6">総合勤務時間</td>
         <td>累計在社時間</td>
         <td colspan="5"></td>
-        <td rowspan="2"><%= link_to "申請", user_path(date: @first_day.next_month), class: "btn btn-primary" %></td>
+        <td rowspan="2">
+          <p>所属長承認</p>
+          <%= form_for @user do |f| %>
+            <%= f.collection_select :id, User.all, :id, :name, :include_blank => true %>
+          <% end %>
+          <%= link_to "申請", user_path(date: @first_day.next_month), class: "btn btn-primary" %>
+        </td>
       </tr>
       <tr>
         <td colspan="2"><%= @attendances.count %></td>
