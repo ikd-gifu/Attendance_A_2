@@ -41,7 +41,7 @@
 </div>
 
 <div>
-  <table class="table table-bordered table-condensed table-hover" id="table-attendances">
+  <table class="table table-bordered table-condensed table-striped table-hover" id="table-attendances">
     <thead>
       <tr>
         <th rowspan="3">残業申請</th>
@@ -76,8 +76,16 @@
       <% @attendances.each do |day| %>
         <tr>
           <td><%= link_to "残業申請", user_path(date: @first_day.next_month), class: "btn btn-primary" %></td>
+          <% css_class =
+            case %w{日 月 火 水 木 金 土}[day.worked_on.wday]
+            when '土'
+              'text-primary'
+            when '日'
+              'text-danger'
+            end
+          %>
           <td><%= l(day.worked_on, format: :short) %></td>
-          <td><%= $days_of_the_week[day.worked_on.wday] %></td>
+          <td class="<%= css_class %>"><%= %w{日 月 火 水 木 金 土}[day.worked_on.wday] %></td>
           <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
           <td><%= l(day.started_at, format: :minute) if day.started_at.present? %></td>
           <td>
