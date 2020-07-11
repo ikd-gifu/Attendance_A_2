@@ -11,7 +11,7 @@
           <th>翌日</th>
           <th>在社時間</th>
           <th>備考</th>
-          <th>指示者確認</th>
+          <th>指示者確認㊞</th>
         </tr>
       </thead>
       <tbody>
@@ -47,7 +47,11 @@
                 <% end %>
               </td>
               <td><%= attendance.text_field :note, class: "form-control" %></td>
-              <td></td>
+              <td>
+                <%= form_for @user do |f| %>
+                  <%= f.collection_select :id, User.all, :id, :name, :include_blank => true %>
+                <% end %>
+              </td>
             </tr>
           <% end %>
         <% end %>
