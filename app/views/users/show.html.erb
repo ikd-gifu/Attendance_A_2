@@ -126,7 +126,7 @@
         <td rowspan="2">
           <p>所属長承認</p>
           <%= form_for @user do |f| %>
-            <%= f.collection_select :id, User.all, :id, :name, :include_blank => true %>
+            <%= f.collection_select :id, User.all, :id, :name, :include_blank => true  %>
           <% end %>
           <%= link_to "申請", user_path(date: @first_day.next_month), class: "btn btn-primary" %>
         </td>
