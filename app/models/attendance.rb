@@ -3,6 +3,7 @@ class Attendance < ApplicationRecord
 
   validates :worked_on, presence: true
   validates :note, length: { maximum: 50 }
+  validates :business_process_content, length: { maximum: 200 }, allow_blank: true
 
   validate :finished_at_is_invalid_without_a_started_at
 

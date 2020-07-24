@@ -1,0 +1,47 @@
+<% provide(:class_text, 'overtime application') %>
+<% provide(:button_text, '変更を送信する') %>
+
+<div class="modal-dialog modal-lg modal-dialog-center">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h1 class="modal-title">【残業申請】</h1>
+    </div>
+    <div class="modal-body">
+      <table class="table table-bordered">
+          <%= form_with(model: @attendance, url: attendances_update_one_day_overtime_application_user_path(@user, @user.attendances.worked_on), local: true, method: :patch) do |f| %>
+            <%= render 'shared/error_messages', object: @attendance %>
+
+          <thead>
+            <tr>
+              <th>日付</th>
+              <th>曜日</th>
+              <th>終了予定時間</th>
+              <th>翌日</th>
+              <th>業務処理内容</th>
+              <th>指示者確認㊞</th>
+            </tr>
+          </thead>
+          
+          <tbody>
+            <tr>
+              <th><%= l(@attendance.worked_on, format: :short) %></th>
+              <th></th>
+              <th><%= f.time_field  :"終了予定時間", class: "form-control" %></th>
+              <th><%= f.check_box :"翌日", id: "remember_me" %></th>
+              <th><%= f.text_field :"業務処理内容", class: "form-control" %></th>
+              <th><%= f.select :"指示者確認㊞", [["選択してください"],["上長A"],["上長B"]]%></th>
+            </tr>
+          </tbody>
+
+            <table class="center">
+              <%= f.submit yield(:button_text), class: "btn btn-block btn-primary btn-#{yield(:class_text)}" %>
+            </table>
+          <% end %>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
