@@ -11,8 +11,8 @@
     </div>
     <div class="modal-body">
       <table class="table table-bordered">
-          <%= form_with(model: @attendance, url: attendances_update_one_day_overtime_application_user_path(@user, @user.attendances.worked_on), local: true, method: :patch) do |f| %>
-            <%= render 'shared/error_messages', object: @attendance %>
+          <%= form_with(model: @attendance, url: attendances_update_one_day_overtime_application_user_path(@attendance), local: true, method: :patch) do |f| %>
+            <%= render 'shared/error_messages', object: @user %>
 
           <thead>
             <tr>
@@ -29,7 +29,7 @@
             <tr>
               <th><%= l(@attendance.worked_on, format: :short) %></th>
               <th></th>
-              <th><%= f.time_field  :"終了予定時間", class: "form-control" %></th>
+              <th><%= f.time_field :"終了予定時間", class: "form-control" %></th>
               <th><%= f.check_box :"翌日", id: "remember_me" %></th>
               <th><%= f.text_field :"業務処理内容", class: "form-control" %></th>
               <th><%= f.select :"指示者確認㊞", [["選択してください"],["上長A"],["上長B"]]%></th>

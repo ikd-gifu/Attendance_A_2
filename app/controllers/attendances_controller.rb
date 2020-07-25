@@ -4,7 +4,7 @@ class AttendancesController < ApplicationController
   before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_one_day_overtime_application, :update_one_day_overtime_application]
   before_action :logged_in_user, only: [:update, :edit_one_month, :edit_one_day_overtime_application, :update_one_day_overtime_application]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
-  before_action :set_one_month, only: :edit_one_month
+  before_action :set_one_month, only: [:edit_one_month, :edit_one_day_overtime_application, :update_one_day_overtime_application]
 
   UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
 
@@ -52,13 +52,14 @@ class AttendancesController < ApplicationController
   def edit_one_day_overtime_application
     @user = User.find(params[:id])
     @attendance = Attendance.find(params[:id])
+    # @attendance = Attendance.find_by(worked_on: params[:date])
   end
 
   def update_one_day_overtime_application
-    if @user.update_attributes(basic_info_params)
-    flash[:success] = "#{@user.name}の基本情報を更新しました。"
+    if @attendance.update_attributes(overtime_application_params)
+    flash[:success] = "#{@user.name}の残業申請を更新しました。"
     else
-    flash[:danger] = "#{@user.name}の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
+    flash[:danger] = "#{@user.name}の残業申請の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
     end
     redirect_to users_url
   end
