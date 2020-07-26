@@ -75,7 +75,7 @@
     <tbody>
       <% @attendances.each do |day| %>
         <tr>
-          <td><%= link_to "残業申請", attendances_edit_one_day_overtime_application_user_path(@user, day.worked_on), remote: true, class: "btn btn-primary" %></td>
+          <td><%= link_to "残業申請", attendances_edit_one_day_overtime_application_user_path(@user, date: day.worked_on), remote: true, class: "btn btn-primary" %></td>
           <% css_class =
             case %w{日 月 火 水 木 金 土}[day.worked_on.wday]
             when '土'
@@ -142,4 +142,4 @@
 </div>
 
 <!--モーダルウインドウ表示-->
-<div id="attendances/edit_one_day_overtime_application" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="edit_one_day_overtime_application" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

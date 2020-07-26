@@ -49,13 +49,16 @@ class AttendancesController < ApplicationController
     redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end
   
-  def edit_one_day_overtime_application
+  def edit_one_day_overtime_application#1日分の残業申請
     @user = User.find(params[:id])
-    @attendance = Attendance.find(params[:id])
-    # @attendance = Attendance.find_by(worked_on: params[:date])
+    # @day = Date.parse(params[:day])
+    # @attendance = @user.attendances.find_by(params[:date])
+    # @attendance = Attendance.find(params[:id])
+    @attendance = Attendance.find_by(worked_on: params[:date]) #日付データ取得
+    # @day = @attendance
   end
 
-  def update_one_day_overtime_application
+  def update_one_day_overtime_application#1日分の残業申請
     if @attendance.update_attributes(overtime_application_params)
     flash[:success] = "#{@user.name}の残業申請を更新しました。"
     else
