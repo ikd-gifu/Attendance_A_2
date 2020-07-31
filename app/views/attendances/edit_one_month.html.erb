@@ -37,9 +37,7 @@
                 <td><%= attendance.time_field :finished_at, class: "form-control" %></td>
               <% end %>
               <td>
-                <%= f.label :remember_me, class: "checkbox-one-month", for: "remember-me" do %>
-                  <%= f.check_box :remember_me, id: "remember-me" %>
-                <% end %>
+                <%= attendance.check_box :"next_day", {}, "true", "false" %>
               </td>
               <td>
                 <% if day.started_at.present? && day.finished_at.present? %>
