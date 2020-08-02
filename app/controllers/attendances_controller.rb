@@ -59,10 +59,13 @@ class AttendancesController < ApplicationController
   end
 
   def update_one_day_overtime_application#1日分の残業申請
-    if @attendance.update_attributes(overtime_application_params)
-    flash[:success] = "#{@user.name}の残業申請を更新しました。"
+    @user = User.find(params[:id])
+    @attendance = Attendance.find_by(worked_on: params[:attendance][:date])
+    
+    if @attendance.update_attributes(one_day_overtime_application_params)
+      flash[:success] = "#{@user.name}の残業申請を更新しました。"
     else
-    flash[:danger] = "#{@user.name}の残業申請の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
+      flash[:danger] = "#{@user.name}の残業申請の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
     end
     redirect_to users_url
   end
@@ -73,8 +76,8 @@ class AttendancesController < ApplicationController
     end
 
     #1日分の残業申請
-    def overtime_application_params
-      params.require(:user).permit(attendances: [:scheduled_end_time, :next_day, :business_process_content])[:attendances]
+    def one_day_overtime_application_params
+      params.require(:attendance).permit(:scheduled_end_time, :next_day, :business_process_content)
     end
 
   def admin_or_correct_user

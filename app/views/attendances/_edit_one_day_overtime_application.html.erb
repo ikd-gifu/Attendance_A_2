@@ -10,9 +10,11 @@
       <h1 class="modal-title">【残業申請】</h1>
     </div>
     <div class="modal-body">
-      <table class="table table-bordered">
-          <%= form_with(model: @attendance, url: attendances_update_one_day_overtime_application_user_path(@attendance), local: true, method: :patch) do |f| %>
-            <%= render 'shared/error_messages', object: @user %>
+      
+      <%= form_with(model: @attendance, url:attendances_update_one_day_overtime_application_user_path(@user), local: true, method: :patch) do |f| %>
+        <%= render 'shared/error_messages', object: @user %>
+        <%= f.hidden_field :date, :value => @attendance.worked_on %>
+        <table class="table table-bordered">
 
           <thead>
             <tr>
@@ -41,16 +43,12 @@
               <th><%= f.time_field :"scheduled_end_time", class: "form-control" %></th>
               <th><%= f.check_box :"next_day", {}, "true", "false" %></th>
               <th><%= f.text_field :"business_process_content", class: "form-control" %></th>
-              <th><%= f.select :"指示者確認㊞", [["選択してください"],["上長A"],["上長B"]]%></th>
+              <th><%= f.collection_select :name, User.where(superior: true), :name, :name, :prompt =>"上長を選択してください。" %></th>
             </tr>
           </tbody>
-
-            <table class="center">
-              <%= f.submit yield(:button_text), class: "btn btn-block btn-primary btn-#{yield(:class_text)}" %>
-            </table>
-          <% end %>
         </table>
-      </div>
+        <%= f.submit yield(:button_text), class: "btn btn-block btn-primary btn-#{yield(:class_text)}" %>
+      <% end %>
     </div>
   </div>
 </div>
