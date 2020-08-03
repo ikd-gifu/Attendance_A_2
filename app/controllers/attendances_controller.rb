@@ -59,7 +59,7 @@ class AttendancesController < ApplicationController
   end
 
   def update_one_day_overtime_application#1日分の残業申請
-    @user = User.find(params[:id])
+    # @user = User.find(params[:id])
     @attendance = Attendance.find_by(worked_on: params[:attendance][:date])
     
     if @attendance.update_attributes(one_day_overtime_application_params)
@@ -67,7 +67,7 @@ class AttendancesController < ApplicationController
     else
       flash[:danger] = "#{@user.name}の残業申請の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
     end
-    redirect_to users_url
+    redirect_to user_url
   end
 
   private
@@ -76,7 +76,7 @@ class AttendancesController < ApplicationController
     end
 
     #1日分の残業申請
-    def one_day_overtime_application_params
+    def one_day_overtime_application_params #モーダルのフィールドがattendanceの中にデータを入れる構造になているためrequire(:attendance)
       params.require(:attendance).permit(:scheduled_end_time, :next_day, :business_process_content)
     end
 

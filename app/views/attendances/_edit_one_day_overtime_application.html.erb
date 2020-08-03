@@ -47,6 +47,7 @@
             </tr>
           </tbody>
         </table>
+        <%# テーブルの中に入れるとボタンが動作しなくなる・テーブルをテーブルの中に入れ子にしない %>
         <%= f.submit yield(:button_text), class: "btn btn-block btn-primary btn-#{yield(:class_text)}" %>
       <% end %>
     </div>
