@@ -76,7 +76,7 @@ class AttendancesController < ApplicationController
     end
 
     #1日分の残業申請
-    def one_day_overtime_application_params #モーダルのフィールドがattendanceの中にデータを入れる構造になているためrequire(:attendance)
+    def one_day_overtime_application_params #モーダルのフィールドがattendanceの中にデータを入れる構造になっているためrequire(:attendance)
       params.require(:attendance).permit(:scheduled_end_time, :next_day, :business_process_content)
     end
 
