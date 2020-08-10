@@ -41,11 +41,7 @@
               </td>
               <td>
                 <% if day.started_at.present? && day.finished_at.present? %>
-                  <% if day.next_day == "true" %>
-                    <% overtime_next_day(day.started_at, day.finished_at, day.next_day)%>
-                  <% else %>
-                    <%= working_times(day.started_at, day.finished_at) %>
-                  <% end %>
+                  <%= working_times(day.started_at, day.finished_at, day.next_day) %>
                 <% end %>
               </td>
               <td><%= attendance.text_field :note, class: "form-control" %></td>
