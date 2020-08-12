@@ -6,8 +6,14 @@ User.create!(name: "Sample User",
              password_confirmation: "password",
              admin: true)
              
-User.create!(name: "Superior User",
-             email: "superior@email.com",
+User.create!(name: "Superior User_1",
+             email: "superior_1@email.com",
+             password: "password",
+             password_confirmation: "password",
+             superior: true)
+
+User.create!(name: "Superior User_2",
+             email: "superior_2@email.com",
              password: "password",
              password_confirmation: "password",
              superior: true)

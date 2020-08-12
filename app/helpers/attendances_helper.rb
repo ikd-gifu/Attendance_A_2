@@ -17,10 +17,12 @@ module AttendancesHelper
   end
   
   def overtime(designated_work_end_time, next_day, scheduled_end_time, worked_on)
+    @corrected_scheduled_end_time = scheduled_end_time.change(month: worked_on.month, day: worked_on.day, sec: 0)
+    @corrected_designated_work_end_time = worked_on.to_datetime.in_time_zone.change(hour: 17, min: 30, sec: 0)
     if next_day == true
-      format("%.2f", (((scheduled_end_time - worked_on.to_datetime.in_time_zone.change(hour: 17, min: 30, sec: 0)) / 60) / 60.0) + 24)
+      format("%.2f", (((@corrected_scheduled_end_time - @corrected_designated_work_end_time) / 60) / 60.0) + 24)
     else
-      format("%.2f", (((scheduled_end_time - worked_on.to_datetime.in_time_zone.change(hour: 17, min: 30, sec: 0)) / 60) / 60.0))
+      format("%.2f", (((@corrected_scheduled_end_time - @corrected_designated_work_end_time) / 60) / 60.0))
     end
   end
   
