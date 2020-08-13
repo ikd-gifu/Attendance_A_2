@@ -1,6 +1,7 @@
 <% provide(:title, @user.name) %>
 <%= form_with(model: @user, url: attendances_update_one_month_user_path(date: @first_day), local: true, method: :patch) do |f| %>
   <div>
+    <h1>勤怠変更申請</h1>
     <table class="table table-bordered table-condensed table-striped table-hover" id="table-attendances">
       <thead>
         <tr>
@@ -46,6 +47,7 @@
               </td>
               <td><%= attendance.text_field :note, class: "form-control" %></td>
               <td>
+                <%= f.collection_select :name, User.where(superior: true), :name, :name, :prompt =>"上長を選択してください。" %>
                 <!--< %= form_for @user do |f| %>-->
                 <!--  < %= f.collection_select :id, User.all, :id, :name, :include_blank => true %>-->
                 <!--< % end %>-->
