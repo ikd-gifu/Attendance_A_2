@@ -59,7 +59,7 @@ class AttendancesController < ApplicationController
   end
 
   def update_one_day_overtime_application#1日分の残業申請
-    # @user = User.find(params[:id])
+    @user = User.find(params[:id])
     @attendance = Attendance.find_by(worked_on: params[:attendance][:date])
     
     if @attendance.update_attributes(one_day_overtime_application_params)
