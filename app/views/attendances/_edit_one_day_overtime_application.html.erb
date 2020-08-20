@@ -43,7 +43,7 @@
               <th><%= f.time_field :"scheduled_end_time", class: "form-control" %></th>
               <th><%= f.check_box :"next_day", {}, "true", "false" %></th>
               <th><%= f.text_field :"business_process_content", class: "form-control" %></th>
-              <th><%= f.collection_select :name, User.where(superior: true), :name, :name, :prompt =>"上長を選択してください。" %></th>
+              <th><%= f.collection_select(:id, User.where(superior: true), :id, :name, {prompt: "上長を選択してください。"}) %></th>
             </tr>
           </tbody>
         </table>
