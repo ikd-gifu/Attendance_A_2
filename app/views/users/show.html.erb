@@ -115,7 +115,11 @@
             <% end %>
           </td>
           <td><%= day.business_process_content %></td>
-          <td></td>
+          <td>
+            <% if day.overtime_application_target_superior_id.present? && day.overtime_application_status.present? %>
+              <%= day.overtime_application_target_superior_id %>に残業<%= day.overtime_application_status %>
+            <% end %>
+          </td>
         </tr>
       <% end %>
     </tbody>

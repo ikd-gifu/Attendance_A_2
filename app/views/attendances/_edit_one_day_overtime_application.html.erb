@@ -43,7 +43,8 @@
               <th><%= f.time_field :"scheduled_end_time", class: "form-control" %></th>
               <th><%= f.check_box :"next_day", {}, "true", "false" %></th>
               <th><%= f.text_field :"business_process_content", class: "form-control" %></th>
-              <th><%= f.collection_select(:id, User.where(superior: true), :id, :name, {prompt: "上長を選択してください。"}) %></th>
+              <th><%= f.collection_select(:overtime_application_target_superior_id, User.where(superior: true), :id, :name, {prompt: "上長を選択してください。"}) %></th>
+              <%= f.hidden_field :overtime_application_status, :value => "申請中" %>
             </tr>
           </tbody>
         </table>
