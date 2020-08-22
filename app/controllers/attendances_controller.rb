@@ -63,11 +63,22 @@ class AttendancesController < ApplicationController
     @attendance = Attendance.find_by(worked_on: params[:attendance][:date])
     
     if @attendance.update_attributes(one_day_overtime_application_params)
-      flash[:success] = "#{@user.name}の残業申請を更新しました。"
+      flash[:success] = "#{@user.name}の残業を申請しました。"
     else
-      flash[:danger] = "#{@user.name}の残業申請の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
+      if params[:attendance][:scheduled_end_time].blank?
+        flash[:danger] = "終了予定時間を入力してください。"
+      else params[:attendance][:overtime_application_target_superior_id].blank?
+        flash[:danger] = "申請先上長を選択してください。"
+      end
     end
     redirect_to user_url
+
+    # if @attendance.update_attributes(one_day_overtime_application_params)
+    #   flash[:success] = "#{@user.name}の残業申請を更新しました。"
+    # else
+    #   flash[:danger] = "#{@user.name}の残業申請の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
+    # end
+    # redirect_to user_url
   end
 
   private
