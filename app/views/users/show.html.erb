@@ -26,13 +26,19 @@
   </table>
 </div>
 
-<div>
+<ul class = "infomation">
   <% if current_user.superior? %>
-    <p>【所属長承認申請のお知らせ】</p>
-    <p>【勤怠変更申請のお知らせ】</p>
-    <p>【残業申請のお知らせ】</p>
+    <li>
+      【所属長承認申請のお知らせ】
+    </li>
+    <li>
+      【勤怠変更申請のお知らせ】
+    </li>
+    <li>
+      【残業申請のお知らせ】
+    </li>
   <% end %>
-</div>
+</ul>
 
 <div class="btn-users-show">
   <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %>

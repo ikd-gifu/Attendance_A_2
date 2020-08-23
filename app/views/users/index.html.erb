@@ -5,7 +5,7 @@
 <div class="csv_holder">
   <%= form_tag import_users_path, method: :post, multipart: true do |f| %>
     <div class="search_item">
-      <%= submit_tag 'ファイル選択', class: %i(csv_input_btn), type: 'button', onclick: "$('#file_input').click();" %>
+      <%= submit_tag 'ファイル選択', class: %i(csv_input_btn), type: 'button', oncpck: "$('#file_input').cpck();" %>
       <%= text_field_tag 'filename',"", id: "filename", disabled: true %>
       <%= file_field_tag :file, id: "file_input", style: "display: none;", onchange: "file_selected($(this));" %>
     </div>
@@ -25,7 +25,7 @@
           <tr>
             <% if current_user.admin? && !current_user?(user) %>
               <td><%= user.name %></br>
-                <%= link_to "削除", user, method: :delete, class: "btn btn-md btn-primary",
+                <%= pnk_to "削除", user, method: :delete, class: "btn btn-md btn-primary",
                     data: { confirm:"削除してよろしいですか？" } %></br>
                 <div class="panel-group">
                   <div class="panel panel-default">
@@ -36,7 +36,7 @@
                     </div>
                     
                     <div id="collapse<%= user.id %>" class="panel-collapse collapse">
-                      <ul class="list-group">
+                      <ul class="pst-group">
                         <%= render 'users/user', locals: { user: @user } %>
                         <!--22行目で定義した@userをrender先に渡す-->
                       </ul>

@@ -61,3 +61,26 @@
   margin: 15px 0;
   width: 35%;
 }
+
+/* ユーザー情報ページ */
+
+// 先頭の中点消す
+ul {
+  list-style: none;
+}
+
+// 位置左寄せ
+.infomation {
+  padding-left: 0px;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+// 件数表示
+.box1{
+  padding: 0px;
+  background-color: #fff;
+  border: 2px solid red;
+  color: red;
+  display: inline-block;
+}

@@ -11,7 +11,7 @@ class AttendancesController < ApplicationController
   def update
     @user = User.find(params[:user_id])
     @attendance = Attendance.find(params[:id])
-    
+
     if @attendance.started_at.nil?
       if @attendance.update_attributes(started_at: Time.current.change(sec: 0))
         flash[:info] = "おはようございます！"
@@ -51,6 +51,7 @@ class AttendancesController < ApplicationController
   
   def edit_one_day_overtime_application#1日分の残業申請
     @user = User.find(params[:id])
+    @selected_superior_users = User.where(superior: true).where.not(id: @user.id)
     # @day = Date.parse(params[:day])
     # @attendance = @user.attendances.find_by(params[:date])
     # @attendance = Attendance.find(params[:id])
@@ -62,16 +63,16 @@ class AttendancesController < ApplicationController
     @user = User.find(params[:id])
     @attendance = Attendance.find_by(worked_on: params[:attendance][:date])
     
-    if @attendance.update_attributes(one_day_overtime_application_params)
-      flash[:success] = "#{@user.name}の残業を申請しました。"
+    if params[:attendance][:scheduled_end_time].blank?
+      flash[:danger] = "終了予定時間を入力してください。"
+    elsif params[:attendance][:overtime_application_target_superior_id].blank?
+      flash[:danger] = "申請先上長を選択してください。"
     else
-      if params[:attendance][:scheduled_end_time].blank?
-        flash[:danger] = "終了予定時間を入力してください。"
-      else params[:attendance][:overtime_application_target_superior_id].blank?
-        flash[:danger] = "申請先上長を選択してください。"
-      end
+      @attendance.update_attributes(one_day_overtime_application_params)
+      flash[:success] = "#{@user.name}の残業を申請しました。"
     end
     redirect_to user_url
+  end
 
     # if @attendance.update_attributes(one_day_overtime_application_params)
     #   flash[:success] = "#{@user.name}の残業申請を更新しました。"
@@ -79,7 +80,6 @@ class AttendancesController < ApplicationController
     #   flash[:danger] = "#{@user.name}の残業申請の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
     # end
     # redirect_to user_url
-  end
 
   private
     def attendances_params

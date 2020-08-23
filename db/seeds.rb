@@ -18,6 +18,8 @@ User.create!(name: "Superior User_2",
              password_confirmation: "password",
              superior: true)
 
+puts "Admini & Superior Users Created"
+
 6.times do |n|
   name = Faker::Name.name
   email = "sample-#{n+1}@email.com"
@@ -27,3 +29,5 @@ User.create!(name: "Superior User_2",
                password: password,
                password_confirmation: password)
 end
+
+puts "General Users Created"
