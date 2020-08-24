@@ -25,7 +25,7 @@
           <tr>
             <% if current_user.admin? && !current_user?(user) %>
               <td><%= user.name %></br>
-                <%= pnk_to "削除", user, method: :delete, class: "btn btn-md btn-primary",
+                <%= link_to "削除", user, method: :delete, class: "btn btn-md btn-primary",
                     data: { confirm:"削除してよろしいですか？" } %></br>
                 <div class="panel-group">
                   <div class="panel panel-default">

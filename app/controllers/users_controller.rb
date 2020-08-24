@@ -26,7 +26,6 @@ class UsersController < ApplicationController
   end
   
   def show
-    # @selected = User.find_by(superior:true)
     if current_user.admin?
       flash[:danger] = '権限がありません'
       redirect_to root_url
