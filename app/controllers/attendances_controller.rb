@@ -55,13 +55,13 @@ class AttendancesController < ApplicationController
     # @day = Date.parse(params[:day])
     # @attendance = @user.attendances.find_by(params[:date])
     # @attendance = Attendance.find(params[:id])
-    @attendance = Attendance.find_by(worked_on: params[:date]) #日付データ取得
+    @attendance = Attendance.find_by(worked_on: params[:date], user_id: params[:id]) #日付データ取得
     # @day = @attendance
   end
 
   def update_one_day_overtime_application#1日分の残業申請
     @user = User.find(params[:id])
-    @attendance = Attendance.find_by(worked_on: params[:attendance][:date])
+    @attendance = Attendance.find_by(worked_on: params[:attendance][:date], user_id: params[:id])
     
     if params[:attendance][:scheduled_end_time].blank?
       flash[:danger] = "終了予定時間を入力してください。"
