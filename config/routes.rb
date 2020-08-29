@@ -21,6 +21,8 @@ Rails.application.routes.draw do
       get 'users_at_work'
       get 'attendances/edit_one_day_overtime_application'
       patch 'attendances/update_one_day_overtime_application'
+      get 'attendances/edit_overtime_application_notification'
+      patch 'attendances/update_overtime_application_notification'
     end
     resources :attendances, only: :update
   end

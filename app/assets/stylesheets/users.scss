@@ -76,11 +76,22 @@ ul {
   margin-bottom: 10px;
 }
 
+.infomation p {
+    margin: 0; 
+    padding: 0;
+}
+
 // 件数表示
-.box1{
-  padding: 0px;
+.box1 {
+  padding: 2px;
   background-color: #fff;
   border: 2px solid red;
   color: red;
   display: inline-block;
+}
+
+.notification {
+  margin: 0; 
+  padding: 0;
+  color: red;
 }

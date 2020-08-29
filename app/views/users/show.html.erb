@@ -29,13 +29,17 @@
 <ul class = "infomation">
   <% if current_user.superior? %>
     <li>
-      【所属長承認申請のお知らせ】
+      <p>【所属長承認申請のお知らせ】</p>
     </li>
     <li>
-      【勤怠変更申請のお知らせ】
+      <p>【勤怠変更申請のお知らせ】</p>
     </li>
     <li>
-      【残業申請のお知らせ】
+      <% if @overtime_application_count >= 1 %>
+        <p class = "notification">【残業申請のお知らせ】<%= link_to "#{@overtime_application_count}件の通知があります", attendances_edit_overtime_application_notification_user_path, remote: true, class: "box1" %></p>
+      <% else %>
+        <p>【残業申請のお知らせ】</p>
+      <% end %>
     </li>
   <% end %>
 </ul>
@@ -159,3 +163,4 @@
 <!--1日分の残業申請-->
 <div id="edit_one_day_overtime_application" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <!--残業申請のおしらせ-->
+<div id="edit_overtime_application_notification" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

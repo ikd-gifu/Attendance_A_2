@@ -31,6 +31,9 @@ class UsersController < ApplicationController
       redirect_to root_url
     else
       @worked_sum = @attendances.where.not(started_at: nil).count
+      if current_user.superior?
+        @overtime_application_count = @attendances.where(overtime_application_target_superior_id: params[:id]).where(overtime_application_status: "申請中").count
+      end
     end
   end
 
