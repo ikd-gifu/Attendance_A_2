@@ -1,8 +1,10 @@
 class AttendancesController < ApplicationController
   protect_from_forgery with: :null_session
   
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_one_day_overtime_application, :update_one_day_overtime_application]
-  before_action :logged_in_user, only: [:update, :edit_one_month, :edit_one_day_overtime_application, :update_one_day_overtime_application]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_one_day_overtime_application, :update_one_day_overtime_application,
+                                  :edit_overtime_application_notification, :update_overtime_application_notification]
+  before_action :logged_in_user, only: [:update, :edit_one_month, :edit_one_day_overtime_application, :update_one_day_overtime_application, 
+                                        :edit_overtime_application_notification, :update_overtime_application_notification]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :set_one_month, only: [:edit_one_month, :edit_one_day_overtime_application]
 
@@ -49,7 +51,7 @@ class AttendancesController < ApplicationController
     redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end
   
-  def edit_one_day_overtime_application#1日分の残業申請
+  def edit_one_day_overtime_application # 1日分の残業申請
     @user = User.find(params[:id])
     @selected_superior_users = User.where(superior: true).where.not(id: @user.id)
     # @day = Date.parse(params[:day])
@@ -59,7 +61,7 @@ class AttendancesController < ApplicationController
     # @day = @attendance
   end
 
-  def update_one_day_overtime_application#1日分の残業申請
+  def update_one_day_overtime_application # 1日分の残業申請
     @user = User.find(params[:id])
     @attendance = Attendance.find_by(worked_on: params[:attendance][:date], user_id: params[:id])
     
@@ -80,6 +82,12 @@ class AttendancesController < ApplicationController
     #   flash[:danger] = "#{@user.name}の残業申請の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
     # end
     # redirect_to user_url
+
+  def edit_overtime_application_notification #残業申請のお知らせ
+  end
+  
+  def update_overtime_application_notification #残業申請のお知らせ
+  end
 
   private
     def attendances_params

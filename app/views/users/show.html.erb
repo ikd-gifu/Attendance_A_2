@@ -36,7 +36,12 @@
     </li>
     <li>
       <% if @overtime_application_count >= 1 %>
-        <p class = "notification">【残業申請のお知らせ】<%= link_to "#{@overtime_application_count}件の通知があります", attendances_edit_overtime_application_notification_user_path, remote: true, class: "box1" %></p>
+        <p class = "notification">
+          【残業申請のお知らせ】
+          <%= link_to "#{@overtime_application_count}件の通知があります",
+          attendances_edit_overtime_application_notification_user_path, remote: true, class: "box1" 
+          %>
+        </p>
       <% else %>
         <p>【残業申請のお知らせ】</p>
       <% end %>
@@ -85,7 +90,12 @@
     <tbody>
       <% @attendances.each do |day| %>
         <tr>
-          <td><%= link_to "残業申請", attendances_edit_one_day_overtime_application_user_path(@user, date: day.worked_on), remote: true, class: "btn btn-primary" %></td>
+          <td>
+            <%= link_to "残業申請",
+            attendances_edit_one_day_overtime_application_user_path(@user, date: day.worked_on),
+            remote: true, class: "btn btn-primary" 
+            %>
+          </td>
           <% css_class =
             case %w{日 月 火 水 木 金 土}[day.worked_on.wday]
             when '土'
