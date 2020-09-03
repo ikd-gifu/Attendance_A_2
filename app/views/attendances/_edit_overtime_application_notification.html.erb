@@ -11,7 +11,7 @@
     </div>
     <div class="modal-body">
       
-      <%= form_with(model: @attendance, url:attendances_update_overtime_application_notification_user_path(@user), local: true, method: :patch) do |f| %>
+      <%= form_with(model: @attendances, url:attendances_update_overtime_application_notification_user_path(@user), local: true, method: :patch) do |f| %>
         <%= render 'shared/error_messages', object: @user %>
         <!--< %= f.hidden_field :date, :value => @attendance.worked_on %>-->
         <table class="table table-bordered">

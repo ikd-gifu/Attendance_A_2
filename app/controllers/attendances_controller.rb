@@ -84,7 +84,8 @@ class AttendancesController < ApplicationController
     # redirect_to user_url
 
   def edit_overtime_application_notification #残業申請のお知らせ
-    @attendance = Attendance.all.where(overtime_application_target_superior_id: params[:id])
+    @attendances = Attendance.all.where(overtime_application_target_superior_id: params[:id], overtime_application_status: "申請中")
+    @applicants = User.where(id: @attendances.select(:user_id))
   end
   
   def update_overtime_application_notification #残業申請のお知らせ
