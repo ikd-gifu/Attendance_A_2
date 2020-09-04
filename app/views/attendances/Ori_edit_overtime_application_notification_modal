@@ -1,4 +1,4 @@
-<% provide(:class_text, 'overtime application') %>
+<% provide(:class_text, 'overtime notification') %>
 <% provide(:button_text, '変更を送信する') %>
 
 <div class="modal-dialog modal-lg modal-dialog-center">
@@ -7,13 +7,13 @@
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
-      <h1 class="modal-title">【残業申請】</h1>
+      <h1 class="modal-title">【#{}からの残業申請】</h1>
     </div>
     <div class="modal-body">
       
-      <%= form_with(model: @attendance, url:attendances_update_one_day_overtime_application_user_path(@user), local: true, method: :patch) do |f| %>
+      <%= form_with(model: @attendances, url:attendances_update_overtime_application_notification_user_path(@user), local: true, method: :patch) do |f| %>
         <%= render 'shared/error_messages', object: @user %>
-        <%= f.hidden_field :date, :value => @attendance.worked_on %>
+        <!--< %= f.hidden_field :date, :value => @attendance.worked_on %>-->
         <table class="table table-bordered">
 
           <thead>
@@ -21,9 +21,12 @@
               <th>日付</th>
               <th>曜日</th>
               <th>終了予定時間</th>
-              <th>翌日</th>
+              <th>指定勤務終了時間</th>
+              <th>時間外時間</th>
               <th>業務処理内容</th>
               <th>指示者確認㊞</th>
+              <th>変更</th>
+              <th>勤怠を確認する</th>
             </tr>
           </thead>
           
@@ -41,6 +44,12 @@
               <th><%= l(@attendance.worked_on, format: :short) %></th>
               <td class="<%= css_class %>"><%= %w{日 月 火 水 木 金 土}[day.worked_on.wday] %></td>
               <th><%= f.time_field :"scheduled_end_time", class: "form-control" %></th>
+              <th><%= f.time_field :"designated_work_end_time", class: "form-control" %></th>
+              <th>
+                <% if day.scheduled_end_time.present? %>
+                  <%= overtime(@user.designated_work_end_time, day.next_day, day.scheduled_end_time, day.worked_on) %>
+                <% end %>
+              </th>
               <th><%= f.check_box :"next_day", {}, "true", "false" %></th>
               <th><%= f.text_field :"business_process_content", class: "form-control" %></th>
               <th><%= f.collection_select(:overtime_application_target_superior_id, @selected_superior_users, :id, :name, {prompt: "上長を選択してください。"}) %></th>

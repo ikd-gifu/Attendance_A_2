@@ -85,7 +85,7 @@ class AttendancesController < ApplicationController
 
   def edit_overtime_application_notification #残業申請のお知らせ
     @attendances = Attendance.all.where(overtime_application_target_superior_id: params[:id], overtime_application_status: "申請中")
-    @applicants = User.where(id: @attendances.select(:user_id))
+    @applicant_users = User.where(id: @attendances.select(:user_id))
   end
   
   def update_overtime_application_notification #残業申請のお知らせ
