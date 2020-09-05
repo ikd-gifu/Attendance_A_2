@@ -100,6 +100,10 @@ class AttendancesController < ApplicationController
     def one_day_overtime_application_params #モーダルのフィールドがattendanceの中にデータを入れる構造になっているためrequire(:attendance)
       params.require(:attendance).permit(:scheduled_end_time, :next_day, :business_process_content, :overtime_application_target_superior_id, :overtime_application_status)
     end
+    
+    def overtime_application_notification
+      params.require(:attendance).permit(:change, :overtime_application_status)
+    end
 
   def admin_or_correct_user
     @user = User.find(params[:user_id]) if @user.blank?

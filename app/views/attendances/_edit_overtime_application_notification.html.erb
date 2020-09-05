@@ -15,11 +15,11 @@
         <%= render 'shared/error_messages', object: @user %>
         <!--< %= f.hidden_field :date, :value => @attendance.worked_on %>-->
         
-        <% @applicant_users.each do |user| %>
+        <% @applicant_users.each do |applicant_user| %>
         
           <table class="table table-bordered">
   
-            <h2 class="modal-title">【#{user.name}からの残業申請】</h2>
+            <h1 class="modal-title">【<%= "#{applicant_user.name}" %>からの残業申請】</h1>
             <thead>
               <tr>
                 <th>日付</th>
@@ -34,31 +34,31 @@
               </tr>
             </thead>
             
-            <% @applicant_attendances = @attendances.where(user_id: user.id) %>
-            <% @applicant_attendances.each do |day| %>
+            <% @applicant_attendances = @attendances.where(user_id: applicant_user.id) %>
+            <% @applicant_attendances.each do |applicant_attendance| %>
               <tbody>
                 <tr>
                   <% css_class =
-                    case %w{日 月 火 水 木 金 土}[day.worked_on.wday]
+                    case %w{日 月 火 水 木 金 土}[applicant_attendance.worked_on.wday]
                     when '土'
                       'text-primary'
                     when '日'
                       'text-danger'
                     end
                   %>
-                  <th><%= l(day.worked_on, format: :short) %></th>
-                  <td class="<%= css_class %>"><%= %w{日 月 火 水 木 金 土}[day.worked_on.wday] %></td>
-                  <th><%= day.time_field :"scheduled_end_time", class: "form-control" %></th>
-                  <th><%= day.time_field :"designated_work_end_time", class: "form-control" %></th>
+                  <th><%= l(applicant_attendance.worked_on, format: :short) %></th>
+                  <td class="<%= css_class %>"><%= %w{日 月 火 水 木 金 土}[applicant_attendance.worked_on.wday] %></td>
+                  <th><%= l(applicant_attendance.scheduled_end_time, format: :short) %></th>
+                  <th><%= applicant_user.designated_work_end_time %></th>
                   <th>
-                    <% if day.scheduled_end_time.present? %>
-                      <%= overtime(@user.designated_work_end_time, day.next_day, day.scheduled_end_time, day.worked_on) %>
+                    <% if applicant_attendance.scheduled_end_time.present? %>
+                      <%= overtime(applicant_user.designated_work_end_time, applicant_attendance.next_day, applicant_attendance.scheduled_end_time, applicant_attendance.worked_on) %>
                     <% end %>
                   </th>
-                  <th><%= day.check_box :"next_day", {}, "true", "false" %></th>
-                  <th><%= day.text_field :"business_process_content", class: "form-control" %></th>
-                  <th><%= day.collection_select(:overtime_application_target_superior_id, @selected_superior_users, :id, :name, {prompt: "上長を選択してください。"}) %></th>
-                  <%= day.hidden_field :overtime_application_status, :value => "申請中"  %>
+                  <th><%= applicant_attendance.business_process_content %></th>
+                  <!--<th>< %= applicant_attendance.check_box :change, {}, "true", "false" %></th>-->
+                  <!--<th>< %= applicant_attendance.select :overtime_application_status, [["承認"],["申請中"],["否認"],["なし"]] %></th>-->
+                  <th><%= link_to "確認", "#" , class: "btn btn-primary" %></th>
                 </tr>
                 
               </tbody>
