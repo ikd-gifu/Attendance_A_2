@@ -14,7 +14,7 @@
       <%= form_with(model: @attendance, url:attendances_update_one_day_overtime_application_user_path(@user), local: true, method: :patch) do |f| %>
         <%= render 'shared/error_messages', object: @user %>
         <%= f.hidden_field :date, :value => @attendance.worked_on %>
-        <table class="table table-bordered">
+        <table class="table table-bordered table-striped table-hover">
 
           <thead>
             <tr>
