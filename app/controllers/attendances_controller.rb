@@ -101,6 +101,7 @@ class AttendancesController < ApplicationController
       params.require(:attendance).permit(:scheduled_end_time, :next_day, :business_process_content, :overtime_application_target_superior_id, :overtime_application_status)
     end
     
+     #残業申請のお知らせ
     def overtime_application_notification
       params.require(:attendance).permit(:change, :overtime_application_status)
     end

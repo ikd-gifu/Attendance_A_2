@@ -48,17 +48,17 @@
                   %>
                   <th><%= l(applicant_attendance.worked_on, format: :short) %></th>
                   <td class="<%= css_class %>"><%= %w{日 月 火 水 木 金 土}[applicant_attendance.worked_on.wday] %></td>
-                  <th><%= l(applicant_attendance.scheduled_end_time, format: :short) %></th>
-                  <th><%= applicant_user.designated_work_end_time %></th>
+                  <th><%= l(applicant_attendance.scheduled_end_time, format: :time) %></th>
+                  <th><%= l(applicant_user.designated_work_end_time, format: :time) %></th>
                   <th>
                     <% if applicant_attendance.scheduled_end_time.present? %>
                       <%= overtime(applicant_user.designated_work_end_time, applicant_attendance.next_day, applicant_attendance.scheduled_end_time, applicant_attendance.worked_on) %>
                     <% end %>
                   </th>
                   <th><%= applicant_attendance.business_process_content %></th>
-                  <!--<th>< %= applicant_attendance.check_box :change, {}, "true", "false" %></th>-->
-                  <!--<th>< %= applicant_attendance.select :overtime_application_status, [["承認"],["申請中"],["否認"],["なし"]] %></th>-->
-                  <th><%= link_to "確認", "#" , class: "btn btn-primary" %></th>
+                  <th><%= f.select :overtime_application_status, [["承認", 0],["申請中", 1],["否認", 2],["なし", 3]], :selected=>1 %></th>
+                  <th><%= f.check_box :change, {}, "true", "false" %></th>
+                  <th><%= link_to "確認", user_path(applicant_user.id), class: "btn btn-primary" %></th>
                 </tr>
                 
               </tbody>
