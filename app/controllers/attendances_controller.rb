@@ -97,6 +97,7 @@ class AttendancesController < ApplicationController
     @first_day = params[:date].to_date.beginning_of_month
     @last_day = @first_day.end_of_month
     @attendances = @user.attendances.where(worked_on: @first_day..@last_day)
+    @worked_sum = @attendances.where.not(started_at: nil).count
   end
 
   private
