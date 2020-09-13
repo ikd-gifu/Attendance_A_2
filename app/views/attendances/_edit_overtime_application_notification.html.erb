@@ -57,7 +57,7 @@
                       <% end %>
                     </th>
                     <th><%= day.business_process_content %></th>
-                    <th><%= applicant_attendance.select :overtime_application_status, [["承認", 0],["申請中", 1],["否認", 2],["なし", 3]], :selected=>1 %></th>
+                    <th><%= applicant_attendance.select :overtime_application_status, [["承認", "承認"],["申請中", "申請中"],["否認", "否認"],["なし", "なし"]], :selected=>"申請中" %></th>
                     <th><%= applicant_attendance.check_box :change, {}, "true", "false" %></th>
                     <th><%= link_to "確認", attendances_overtime_application_confirmation_show_user_path(user.id, date: day.worked_on), class: "btn btn-primary" %></th>
                   </tr>
