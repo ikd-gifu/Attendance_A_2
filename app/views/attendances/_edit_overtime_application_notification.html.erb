@@ -11,15 +11,15 @@
     <!--</div>-->
     <div class="modal-body">
       
-      <%= form_with(model: @attendances, url:attendances_update_overtime_application_notification_user_path(@user), local: true, method: :patch) do |f| %>
+      <%= form_with(model: @user, url:attendances_update_overtime_application_notification_user_path(@user), local: true, method: :patch) do |f| %>
         <%= render 'shared/error_messages', object: @user %>
         <!--< %= f.hidden_field :date, :value => @attendance.worked_on %>-->
         
-        <% @applicant_users.each do |applicant_user| %>
+        <% @users.each do |user| %>
         
           <table class="table table-bordered table-striped table-hover">
   
-            <h2 class="modal-title">【<%= "#{applicant_user.name}" %>からの残業申請】</h2>
+            <h2 class="modal-title">【<%= "#{user.name}" %>からの残業申請】</h2>
             <thead>
               <tr>
                 <th>日付</th>
@@ -34,34 +34,36 @@
               </tr>
             </thead>
             
-            <% @applicant_attendances = @attendances.where(user_id: applicant_user.id) %>
-            <% @applicant_attendances.each do |applicant_attendance| %>
-              <tbody>
-                <tr>
-                  <% css_class =
-                    case %w{日 月 火 水 木 金 土}[applicant_attendance.worked_on.wday]
-                    when '土'
-                      'text-primary'
-                    when '日'
-                      'text-danger'
-                    end
-                  %>
-                  <th><%= l(applicant_attendance.worked_on, format: :short) %></th>
-                  <td class="<%= css_class %>"><%= %w{日 月 火 水 木 金 土}[applicant_attendance.worked_on.wday] %></td>
-                  <th><%= l(applicant_attendance.scheduled_end_time, format: :time) %></th>
-                  <th><%= l(applicant_user.designated_work_end_time, format: :time) %></th>
-                  <th>
-                    <% if applicant_attendance.scheduled_end_time.present? %>
-                      <%= overtime(applicant_user.designated_work_end_time, applicant_attendance.next_day, applicant_attendance.scheduled_end_time, applicant_attendance.worked_on) %>
-                    <% end %>
-                  </th>
-                  <th><%= applicant_attendance.business_process_content %></th>
-                  <th><%= f.select :overtime_application_status, [["承認", 0],["申請中", 1],["否認", 2],["なし", 3]], :selected=>1 %></th>
-                  <th><%= f.check_box :change, {}, "true", "false" %></th>
-                  <th><%= link_to "確認", attendances_overtime_application_confirmation_show_user_path(applicant_user.id, date: applicant_attendance.worked_on), class: "btn btn-primary" %></th>
-                </tr>
-                
-              </tbody>
+            <% @applicant_attendances = @attendances.where(user_id: user.id) %>
+            <% @applicant_attendances.each do |day| %>
+              <%= f.fields_for "applicant_attendances[]", day do |applicant_attendance| %>
+                <tbody>
+                  <tr>
+                    <% css_class =
+                      case %w{日 月 火 水 木 金 土}[day.worked_on.wday]
+                      when '土'
+                        'text-primary'
+                      when '日'
+                        'text-danger'
+                      end
+                    %>
+                    <th><%= l(day.worked_on, format: :short) %></th>
+                    <td class="<%= css_class %>"><%= %w{日 月 火 水 木 金 土}[day.worked_on.wday] %></td>
+                    <th><%= l(day.scheduled_end_time, format: :time) %></th>
+                    <th><%= l(user.designated_work_end_time, format: :time) %></th>
+                    <th>
+                      <% if day.scheduled_end_time.present? %>
+                        <%= overtime(user.designated_work_end_time, day.next_day, day.scheduled_end_time, day.worked_on) %>
+                      <% end %>
+                    </th>
+                    <th><%= day.business_process_content %></th>
+                    <th><%= applicant_attendance.select :overtime_application_status, [["承認", 0],["申請中", 1],["否認", 2],["なし", 3]], :selected=>1 %></th>
+                    <th><%= applicant_attendance.check_box :change, {}, "true", "false" %></th>
+                    <th><%= link_to "確認", attendances_overtime_application_confirmation_show_user_path(user.id, date: day.worked_on), class: "btn btn-primary" %></th>
+                  </tr>
+                  
+                </tbody>
+              <% end %>
             <% end %>
             
           </table>

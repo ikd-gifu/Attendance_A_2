@@ -84,11 +84,25 @@ class AttendancesController < ApplicationController
     # redirect_to user_url
 
   def edit_overtime_application_notification #残業申請のお知らせ
-    @attendances = Attendance.all.where(overtime_application_target_superior_id: params[:id], overtime_application_status: "申請中")
-    @applicant_users = User.where(id: @attendances.select(:user_id))
+    @attendances = Attendance.where(overtime_application_target_superior_id: params[:id], overtime_application_status: "申請中")
+    # @users = User.where(id: @attendances.select(:user_id))
+    @users = User.joins(:attendances).group("users.id").where(attendances:{overtime_application_status: "申請中"}).where.not(attendances:{user_id: params[:id]})
   end
   
   def update_overtime_application_notification #残業申請のお知らせ
+    ActiveRecord::Base.transaction do
+      if params[:user][:change] == true
+        overtime_application_notification_params.each do |id, item|
+          attendance = Attendance.find(id)
+          attendance.update_attributes!(item)
+      end
+      end
+  end
+    flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
+    redirect_to user_url(date: params[:date])
+  rescue ActiveRecord::RecordInvalid
+    flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
+    redirect_to user_url(date: params[:date])
   end
 
   def overtime_application_confirmation_show
@@ -111,8 +125,8 @@ class AttendancesController < ApplicationController
     end
     
      #残業申請のお知らせ
-    def overtime_application_notification
-      params.require(:attendance).permit(:change, :overtime_application_status)
+    def overtime_application_notification_params
+      params.require(:user).permit(:change, :overtime_application_status)
     end
 
   def admin_or_correct_user
