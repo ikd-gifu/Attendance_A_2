@@ -3,16 +3,16 @@
 
 <div class="modal-dialog modal-lg modal-dialog-center">
   <div class="modal-content">
-    <!--<div class="modal-header">-->
-    <!--  <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-    <!--    <span aria-hidden="true">&times;</span>-->
-    <!--  </button>-->
-    <!--  <h1 class="modal-title">【#{}からの残業申請】</h1>-->
-    <!--</div>-->
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <!--<h1 class="modal-title">【#{}からの残業申請】</h1>-->
+    </div>
     <div class="modal-body">
       
       <%= form_with(model: @user, url:attendances_update_overtime_application_notification_user_path(@user), local: true, method: :patch) do |f| %>
-        <%= render 'shared/error_messages', object: @user %>
+        <!--< %= render 'shared/error_messages', object: @user %>-->
         <!--< %= f.hidden_field :date, :value => @attendance.worked_on %>-->
         
         <% @users.each do |user| %>
@@ -20,19 +20,19 @@
           <table class="table table-bordered table-striped table-hover">
   
             <h2 class="modal-title">【<%= "#{user.name}" %>からの残業申請】</h2>
-            <thead>
-              <tr>
-                <th>日付</th>
-                <th>曜日</th>
-                <th>終了予定時間</th>
-                <th>指定勤務終了時間</th>
-                <th>時間外時間</th>
-                <th>業務処理内容</th>
-                <th>指示者確認㊞</th>
-                <th>変更</th>
-                <th>勤怠を確認する</th>
-              </tr>
-            </thead>
+              <thead>
+                <tr>
+                  <th>日付</th>
+                  <th>曜日</th>
+                  <th>終了予定時間</th>
+                  <th>指定勤務終了時間</th>
+                  <th>時間外時間</th>
+                  <th>業務処理内容</th>
+                  <th>指示者確認㊞</th>
+                  <th>変更</th>
+                  <th>勤怠を確認する</th>
+                </tr>
+              </thead>
             
             <% @applicant_attendances = @attendances.where(user_id: user.id) %>
             <% @applicant_attendances.each do |day| %>
