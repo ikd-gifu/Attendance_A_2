@@ -91,12 +91,14 @@ class AttendancesController < ApplicationController
   
   def update_overtime_application_notification #残業申請のお知らせ
     ActiveRecord::Base.transaction do
-      # if params[:user][:applicant_attenances][:id][:change] == true
-        overtime_application_notification_params.each do |id, item|
-          attendance = Attendance.find(id)
-          attendance.update_attributes!(item)
-      # end
-      end
+      overtime_application_notification_params.each do |id, item|
+        attendance = Attendance.find(id)
+        # if attendance.change == true
+        attendance.update_attributes!(item)
+        # else attendance.change == false
+          
+        # end
+    end
   end
     flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
     redirect_to user_url(date: params[:date])
