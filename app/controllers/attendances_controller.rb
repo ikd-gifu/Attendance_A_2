@@ -92,14 +92,20 @@ class AttendancesController < ApplicationController
   def update_overtime_application_notification #残業申請のお知らせ
     ActiveRecord::Base.transaction do
       overtime_application_notification_params.each do |id, item|
-        attendance = Attendance.find(id)
-        # if attendance.change == true
-        attendance.update_attributes!(item)
-        # else attendance.change == false
-          
-        # end
+        if item[:change] == "true" #itemの中にchangeとovertime_application_statusが入っている　文字列の形
+          attendance = Attendance.find(id) #データベースの中の同じidのattendanceレコードを探してきている
+          if item[:overtime_application_status] =="なし" #勤怠が"なし"の場合、申請自体なかったことにする
+            attendance.scheduled_end_time = nil #以下で申請したattendanceレコードを空にする
+            attendance.next_day = false
+            attendance.business_process_content = nil
+            attendance.overtime_application_target_superior_id = nil
+            item[:overtime_application_status] = "" #パラメーターとして飛んできているovertime_application_status、changeも元に戻す
+            item[:change] = "false" #paramsなので文字列
+          end
+          attendance.update_attributes!(item)
+        end
+      end
     end
-  end
     flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
     redirect_to user_url(date: params[:date])
   rescue ActiveRecord::RecordInvalid
