@@ -107,7 +107,7 @@ class AttendancesController < ApplicationController
       end
     end
     flash[:success] = "残業申請を#{}件承認、#{}件否認、#{}件取り消しました。" #要修正　20200919
-    redirect_to user_url(date: params[:date])
+    redirect_to user_url
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
     redirect_to user_url(date: params[:date])
