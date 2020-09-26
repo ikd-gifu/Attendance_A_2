@@ -90,23 +90,31 @@ class AttendancesController < ApplicationController
   end
   
   def update_overtime_application_notification #残業申請のお知らせ
+    n1 = 0 #数値であることを定義　これにより以下でnが数値として認識される
+    n2 = 0 #この階層（flashメッセージと同じ）でないとエラーになる
+    n3 = 0
     ActiveRecord::Base.transaction do
       overtime_application_notification_params.each do |id, item|
         if item[:change] == "true" #itemの中にchangeとovertime_application_statusが入っている　文字列の形
           attendance = Attendance.find(id) #データベースの中の同じidのattendanceレコードを探してきている
-          if item[:overtime_application_status] =="なし" #勤怠が"なし"の場合、申請自体なかったことにする
-            attendance.scheduled_end_time = nil #以下で申請したattendanceレコードを空にする
-            attendance.next_day = false
-            attendance.business_process_content = nil
-            attendance.overtime_application_target_superior_id = nil
-            item[:overtime_application_status] = "" #パラメーターとして飛んできているovertime_application_status、changeも元に戻す
-            item[:change] = "false" #paramsなので文字列
-          end
+            if item[:overtime_application_status] == "承認"
+              n1 = n1 + 1
+            elsif item[:overtime_application_status] == "否認"
+              n2 = n2 + 1
+            elsif item[:overtime_application_status] == "なし" #勤怠が"なし"の場合、申請自体なかったことにする
+              n3 = n3 + 1
+              attendance.scheduled_end_time = nil #以下で申請したattendanceレコードを空にする
+              attendance.next_day = false
+              attendance.business_process_content = nil
+              attendance.overtime_application_target_superior_id = nil
+              item[:overtime_application_status] = "" #パラメーターとして飛んできているovertime_application_status、changeも元に戻す
+              item[:change] = "false" #paramsなので文字列
+            end
           attendance.update_attributes!(item)
         end
       end
     end
-    flash[:success] = "残業申請を#{}件承認、#{}件否認、#{}件取り消しました。" #要修正　20200919
+    flash[:success] = "残業申請を#{n1}件承認、#{n2}件否認、#{n3}件取り消しました。" #要修正　20200919
     redirect_to user_url
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
