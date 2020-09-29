@@ -121,7 +121,7 @@ class AttendancesController < ApplicationController
     redirect_to user_url(date: params[:date])
   end
 
-  def overtime_application_confirmation_show
+  def overtime_application_confirmation_show #残業の確認リンク
     @user = User.find(params[:id])
     @attendance = Attendance.find(params[:id])
     @first_day = params[:date].to_date.beginning_of_month
