@@ -26,15 +26,17 @@ class Attendance < ApplicationRecord
     errors.add(:started_at, "が必要です") if started_at.blank? && finished_at.present?
   end
 
-  def started_at_than_finished_at_fast_if_invalid
-    if started_at.present? && finished_at.present?
-      errors.add(:started_at, "より早い退勤時間は無効です") if started_at > finished_at
-    end
-  end
-  
   def started_at_is_invalid_without_a_finished_at
     unless Date.current == worked_on #今日の日付と取得された日付が一致するか
     errors.add(:finished_at, "が必要です") if finished_at.blank? && started_at.present? #今日の日付と同じ日付でない場合エラー出力
+    end
+  end
+
+  def started_at_than_finished_at_fast_if_invalid
+    if started_at.present? && finished_at.present?
+      if started_at > finished_at && next_day == false
+        errors.add(:started_at, "より早い退勤時間は無効です")
+      end
     end
   end
 end
