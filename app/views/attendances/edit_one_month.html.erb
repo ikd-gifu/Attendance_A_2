@@ -47,11 +47,9 @@
               </td>
               <td><%= attendance.text_field :note, class: "form-control" %></td>
               <td>
-                <%= f.collection_select :name, User.where(superior: true), :name, :name, :prompt =>"上長を選択してください。" %>
-                <!--< %= form_for @user do |f| %>-->
-                <!--  < %= f.collection_select :id, User.all, :id, :name, :include_blank => true %>-->
-                <!--< % end %>-->
+                <%= f.collection_select(:overtime_application_target_superior_id, @selected_superior_users, :id, :name, {prompt: ""}) %>
               </td>
+                <!--< %= f.hidden_field :attendance_change_application_status, :value => "申請中"  %>-->
             </tr>
           <% end %>
         <% end %>

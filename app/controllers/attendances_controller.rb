@@ -35,6 +35,7 @@ class AttendancesController < ApplicationController
       flash[:danger] = '権限がありません'
       redirect_to root_url
     end
+    @selected_superior_users = User.where(superior: true).where.not(id: @user.id)
   end
 
   def update_one_month
