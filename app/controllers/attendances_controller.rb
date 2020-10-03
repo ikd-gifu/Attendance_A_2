@@ -132,8 +132,9 @@ class AttendancesController < ApplicationController
   end
 
   private
+    #勤怠変更の申請
     def attendances_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :next_day])[:attendances]
+      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :next_day,:overtime_application_target_superior_id, :attendance_change_application_status])[:attendances]
     end
 
     #1日分の残業申請
