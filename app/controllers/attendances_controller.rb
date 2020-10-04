@@ -35,14 +35,16 @@ class AttendancesController < ApplicationController
       flash[:danger] = '権限がありません'
       redirect_to root_url
     end
-    @selected_superior_users = User.where(superior: true).where.not(id: @user.id)
+    @selected_superior_users_for_change = User.where(superior: true).where.not(id: @user.id)
   end
 
   def update_one_month
     ActiveRecord::Base.transaction do
       attendances_params.each do |id, item|
         attendance = Attendance.find(id)
-        attendance.update_attributes!(item)
+        if item[:attendance_change_application_target_superior_id].present?
+          attendance.update_attributes!(item)
+        end
       end
     end
     flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
@@ -134,7 +136,7 @@ class AttendancesController < ApplicationController
   private
     #勤怠変更の申請
     def attendances_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :next_day,:overtime_application_target_superior_id, :attendance_change_application_status])[:attendances]
+      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :next_day,:attendance_change_application_target_superior_id, :attendance_change_application_status])[:attendances]
     end
 
     #1日分の残業申請

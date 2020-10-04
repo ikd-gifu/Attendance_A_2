@@ -47,9 +47,14 @@
               </td>
               <td><%= attendance.text_field :note, class: "form-control" %></td>
               <td>
-                <%= attendance.collection_select(:overtime_application_target_superior_id, @selected_superior_users, :id, :name, {prompt: ""}) %>
+                <%= attendance.collection_select(:attendance_change_application_target_superior_id, @selected_superior_users_for_change, :id, :name, {prompt: ""}) %>
+                <!--< %= attendance.attendance_change_application_target_superior_id %>-->
+                  <!--< %= attendance.hidden_field :attendance_change_application_status, :value => "申請中"  %>-->
+                <!--< % end %>-->
               </td>
-                <!--< %= attendance.hidden_field :attendance_change_application_status, :value => "申請中"  %>-->
+                <!--< % if attendance_change_application_target_superior_id.present? %>-->
+                  <%= attendance.hidden_field :attendance_change_application_status, :value => "申請中"  %>
+                <!--< % end %>-->
             </tr>
           <% end %>
         <% end %>
