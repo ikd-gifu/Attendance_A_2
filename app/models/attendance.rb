@@ -21,6 +21,9 @@ class Attendance < ApplicationRecord
   
   # 退勤時間が存在しない場合、出勤時間は無効
   validate :started_at_is_invalid_without_a_finished_at
+  
+  #指示者確認が選択されていない場合は無効
+  validate :superior_not_selected_if_invalid
 
   def finished_at_is_invalid_without_a_started_at
     errors.add(:started_at, "が必要です") if started_at.blank? && finished_at.present?
@@ -37,6 +40,13 @@ class Attendance < ApplicationRecord
       if started_at > finished_at && next_day == false
         errors.add(:started_at, "より早い退勤時間は無効です")
       end
+    end
+  end
+  
+  def superior_not_selected_if_invalid
+    unless attendance_change_application_target_superior_id.present?
+      debugger
+      errors.add(:attendance_change_application_target_superior_id, "を選択してください")
     end
   end
 end
