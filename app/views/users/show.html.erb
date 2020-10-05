@@ -146,6 +146,16 @@
               <% end %>
             <% end %>
             <%= day.attendance_change_application_status %>
+            <%= day.attendance_change_application_target_superior_id %>
+            <!--< % if day.attendance_change_application_status.present? %>-->
+            <!--  < % if day.attendance_change_application_status == "申請中" %>-->
+            <!--    < %= "#{User.find(day.attendance_change_application_target_superior_id).name}に勤怠変更#{day.attendance_change_application_status}" %>-->
+            <!--  < % elsif day.attendance_change_application_status == "承認" %>-->
+            <!--    < %= "残業#{day.attendance_change_application_status}済" %>-->
+            <!--  < % else day.attendance_change_application_status == "否認" %>-->
+            <!--    < %= "残業#{day.attendance_change_application_status}" %>-->
+            <!--  < % end %>-->
+            <!--< % end %>-->
           </td>
         </tr>
       <% end %>
