@@ -44,9 +44,12 @@ class Attendance < ApplicationRecord
   end
   
   def superior_not_selected_if_invalid
-    unless attendance_change_application_target_superior_id.present?
-      debugger
-      errors.add(:attendance_change_application_target_superior_id, "を選択してください")
+    if started_at.present? && finished_at.present?
+      unless Date.current == worked_on
+        unless attendance_change_application_target_superior_id.present?
+          errors.add(:attendance_change_application_target_superior_id, "を選択してください")
+        end
+      end
     end
   end
 end
