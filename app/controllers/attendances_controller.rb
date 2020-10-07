@@ -2,7 +2,8 @@ class AttendancesController < ApplicationController
   protect_from_forgery with: :null_session
   
   before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_one_day_overtime_application, :update_one_day_overtime_application,
-                                  :edit_overtime_application_notification, :update_overtime_application_notification]
+                                  :edit_overtime_application_notification, :update_overtime_application_notification,
+                                  :edit_attendance_change_application_notification, :update_attendance_change_application_notification]
   before_action :logged_in_user, only: [:update, :edit_one_month, :edit_one_day_overtime_application, :update_one_day_overtime_application, 
                                         :edit_overtime_application_notification, :update_overtime_application_notification]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
@@ -30,7 +31,7 @@ class AttendancesController < ApplicationController
     redirect_to @user
   end
 
-  def edit_one_month #before_actionのadmin_or_correct_userに追加
+  def edit_one_month #before_actionのadmin_or_correct_userに追加 #勤怠変更申請
     if current_user.admin?
       flash[:danger] = '権限がありません'
       redirect_to root_url
@@ -38,7 +39,7 @@ class AttendancesController < ApplicationController
     @selected_superior_users_for_change = User.where(superior: true).where.not(id: @user.id)
   end
 
-  def update_one_month
+  def update_one_month #勤怠変更申請
     ActiveRecord::Base.transaction do
       attendances_params.each do |id, item|
         attendance = Attendance.find(id)
@@ -86,6 +87,44 @@ class AttendancesController < ApplicationController
     # end
     # redirect_to user_url
 
+  def edit_attendance_change_application_notification #勤怠変更のお知らせ
+    @attendances = Attendance.where(attendance_change_application_target_superior_id: params[:id], attendance_change_application_status: "申請中")
+    # @users = User.where(id: @attendances.select(:user_id))
+    @users = User.joins(:attendances).group("users.id").where(attendances:{attendance_change_application_status: "申請中"}).where.not(attendances:{user_id: params[:id]})
+  end
+
+  def update_attendance_change_application_notification #勤怠変更のお知らせ
+    n1 = 0 #数値であることを定義　これにより以下でnが数値として認識される
+    n2 = 0 #この階層（flashメッセージと同じ）でないとエラーになる
+    n3 = 0
+    ActiveRecord::Base.transaction do
+      overtime_application_notification_params.each do |id, item|
+        if item[:change] == "true" #itemの中にchangeとovertime_application_statusが入っている　文字列の形
+          attendance = Attendance.find(id) #データベースの中の同じidのattendanceレコードを探してきている
+            if item[:attendance_change_application_status] == "承認"
+              n1 = n1 + 1
+            elsif item[:attendance_change_application_status] == "否認"
+              n2 = n2 + 1
+            elsif item[:attendance_change_application_status] == "なし" #勤怠が"なし"の場合、申請自体なかったことにする
+              n3 = n3 + 1 #"なし"をカウントする為、104行目を含むif文は以下の"なし"の処理より上に持ってくる
+              attendance.scheduled_end_time = nil #以下で申請したattendanceレコードを空にする
+              attendance.next_day = false
+              attendance.business_process_content = nil
+              attendance.overtime_application_target_superior_id = nil
+              item[:attendance_change_application_status] = "" #パラメーターとして飛んできているovertime_application_status、changeも元に戻す
+              item[:change] = "false" #paramsなので文字列
+            end
+          attendance.update_attributes!(item)
+        end
+      end
+    end
+    flash[:success] = "残業申請を#{n1}件承認、#{n2}件否認、#{n3}件取り消しました。"
+    redirect_to user_url
+  rescue ActiveRecord::RecordInvalid
+    flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
+    redirect_to user_url(date: params[:date])
+  end
+
   def edit_overtime_application_notification #残業申請のお知らせ
     @attendances = Attendance.where(overtime_application_target_superior_id: params[:id], overtime_application_status: "申請中")
     # @users = User.where(id: @attendances.select(:user_id))
@@ -97,7 +136,7 @@ class AttendancesController < ApplicationController
     n2 = 0 #この階層（flashメッセージと同じ）でないとエラーになる
     n3 = 0
     ActiveRecord::Base.transaction do
-      overtime_application_notification_params.each do |id, item|
+      attendances_params.each do |id, item|
         if item[:change] == "true" #itemの中にchangeとovertime_application_statusが入っている　文字列の形
           attendance = Attendance.find(id) #データベースの中の同じidのattendanceレコードを探してきている
             if item[:overtime_application_status] == "承認"
@@ -117,7 +156,7 @@ class AttendancesController < ApplicationController
         end
       end
     end
-    flash[:success] = "残業申請を#{n1}件承認、#{n2}件否認、#{n3}件取り消しました。" #要修正　20200919
+    flash[:success] = "残業申請を#{n1}件承認、#{n2}件否認、#{n3}件取り消しました。"
     redirect_to user_url
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
