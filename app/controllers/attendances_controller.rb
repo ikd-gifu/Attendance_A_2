@@ -88,6 +88,7 @@ class AttendancesController < ApplicationController
     # redirect_to user_url
 
   def edit_attendance_change_application_notification #勤怠変更のお知らせ
+    # @user = User.find(params[:id])
     @attendances = Attendance.where(attendance_change_application_target_superior_id: params[:id], attendance_change_application_status: "申請中")
     # @users = User.where(id: @attendances.select(:user_id))
     @users = User.joins(:attendances).group("users.id").where(attendances:{attendance_change_application_status: "申請中"}).where.not(attendances:{user_id: params[:id]})
