@@ -30,8 +30,7 @@
                   <th>勤怠を確認する</th>
                 </tr>
               </thead>
-            
-            <% @change_applicant_attendances = @attendances.where(user_id: @user.id) %>
+            <% @change_applicant_attendances = @attendances.where(user_id: user.id) %>
             <% @change_applicant_attendances.each do |day| %>
               <%= f.fields_for "change_applicant_attendances[]", day do |change_applicant_attendance| %>
                 <tbody>
@@ -44,10 +43,22 @@
                         'text-danger'
                       end
                     %>
-                    <th><%= l(day.worked_on, format: :short) %></th>
+                    <th>
+                      <% if day.worked_on.present? %> <!--#lメソッドがday.worked_onがnilだとエラーになる-->
+                        <%= l(day.worked_on, format: :short) %>
+                      <% end %>
+                    </th>
                     <td class="<%= css_class %>"><%= %w{日 月 火 水 木 金 土}[day.worked_on.wday] %></td>
-                    <th><%= l(day.scheduled_end_time, format: :time) %></th>
-                    <th><%= l(user.designated_work_end_time, format: :time) %></th>
+                    <th>
+                      <% if day.scheduled_end_time.present? %>
+                        <%= l(day.scheduled_end_time, format: :time) %>
+                      <% end %>
+                    </th>
+                    <th>
+                      <% if user.designated_work_end_time.present? %>
+                        <%= l(user.designated_work_end_time, format: :time) %>
+                      <% end %>
+                    </th>
                     <th>
                       <% if day.scheduled_end_time.present? %>
                         <%= overtime(user.designated_work_end_time, day.next_day, day.scheduled_end_time, day.worked_on) %>
