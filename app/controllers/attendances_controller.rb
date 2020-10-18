@@ -144,6 +144,10 @@ class AttendancesController < ApplicationController
               n1 = n1 + 1
             elsif item[:overtime_application_status] == "否認"
               n2 = n2 + 1
+              attendance.scheduled_end_time = nil
+              attendance.next_day = false
+              attendance.business_process_content = nil
+              attendance.overtime_application_target_superior_id = nil
             elsif item[:overtime_application_status] == "なし" #勤怠が"なし"の場合、申請自体なかったことにする
               n3 = n3 + 1 #"なし"をカウントする為、104行目を含むif文は以下の"なし"の処理より上に持ってくる
               attendance.scheduled_end_time = nil #以下で申請したattendanceレコードを空にする
