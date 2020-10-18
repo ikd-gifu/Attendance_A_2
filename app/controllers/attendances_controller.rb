@@ -137,7 +137,7 @@ class AttendancesController < ApplicationController
     n2 = 0 #この階層（flashメッセージと同じ）でないとエラーになる
     n3 = 0
     ActiveRecord::Base.transaction do
-      attendances_params.each do |id, item|
+      overtime_application_notification_params.each do |id, item|
         if item[:change] == "true" #itemの中にchangeとovertime_application_statusが入っている　文字列の形
           attendance = Attendance.find(id) #データベースの中の同じidのattendanceレコードを探してきている
             if item[:overtime_application_status] == "承認"
