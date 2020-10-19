@@ -75,7 +75,7 @@ class AttendancesController < ApplicationController
       flash[:danger] = "申請先上長を選択してください。"
     else
       @attendance.update_attributes(one_day_overtime_application_params)
-      flash[:success] = "#{@user.name}の残業を申請しました。"
+      flash[:success] = "#{@user.name}に残業を申請しました。"
     end
     redirect_to user_url
   end
