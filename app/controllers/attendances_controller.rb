@@ -179,7 +179,7 @@ class AttendancesController < ApplicationController
 
   private
     #勤怠変更の申請
-    def attendances_params
+    def overtime_application_notification_params
       params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :next_day,:attendance_change_application_target_superior_id, :attendance_change_application_status])[:attendances]
     end
 
