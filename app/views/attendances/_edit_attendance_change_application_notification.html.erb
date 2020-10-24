@@ -24,7 +24,7 @@
                   <th>終了予定時間</th>
                   <th>指定勤務終了時間</th>
                   <th>時間外時間</th>
-                  <th>業務処理内容</th>
+                  <th>備考</th>
                   <th>指示者確認㊞</th>
                   <th>変更</th>
                   <th>勤怠を確認する</th>
@@ -64,10 +64,10 @@
                         <%= overtime(user.designated_work_end_time, day.next_day, day.scheduled_end_time, day.worked_on) %>
                       <% end %>
                     </th>
-                    <th><%= day.business_process_content %></th>
+                    <th><%= day.note %></th>
                     <th><%= change_applicant_attendance.select :attendance_change_application_status, [["承認", "承認"],["申請中", "申請中"],["否認", "否認"],["なし", "なし"]], :selected=>"申請中" %></th>
-                    <th><%= change_applicant_attendance.check_box :change, {}, "true", "false" %></th>
-                    <th><%= link_to "確認", attendances_overtime_application_confirmation_show_user_path(user.id, date: day.worked_on), class: "btn btn-primary" %></th>
+                    <th><%= change_applicant_attendance.check_box :change_for_attendance_change, {}, "true", "false" %></th>
+                    <th><%= link_to "確認", attendance_change_application_confirmation_show_user_path(user.id, date: day.worked_on), class: "btn btn-primary" %></th>
                   </tr>
                   
                 </tbody>
