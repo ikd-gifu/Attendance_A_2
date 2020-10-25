@@ -41,14 +41,29 @@ class AttendancesController < ApplicationController
 
   def update_one_month #勤怠変更申請
     ActiveRecord::Base.transaction do
-      attendances_params.each do |id, item|
-        attendance = Attendance.find(id)
-        if item[:attendance_change_application_target_superior_id].present?
-          attendance.update_attributes!(item)
+      attendance_change_application_params.each do |id, item|
+        if item[:attendance_change_application_target_superior_id].present? #"否認"の場合 target_superior_id は nil
+          attendance = Attendance.find(id)
+            if attendance.attendance_change_application_status = nil || attendance.attendance_change_application_status = "" #"なし"含む
+              attendance.started_at_before_change = attendance.started_at
+              attendance.finished_at_before_change = attendance.finished_at
+              attendance.started_at_after_change = item[:started_at]
+              attendance.finished_at_after_change = item[:finished_at]
+              attendance.next_day = item[:next_day]
+              attendance.note = item[:note]
+              attendance.attendance_change_application_target_superior_id = item[:attendance_change_application_target_superior_id]
+              attendance.attendance_change_application_status = item[:attendance_change_application_status]
+              attendance.update_attributes!(item)
+            else attendance.attendance_change_application_status = "申請中" && (
+                 attendance.started_at_after_change != item[:started_at_after_change] || attendance.finished_at_after_change != item[:finished_at_after_change])
+              attendance.started_at_after_change = item[:started_at_after_change]
+              attendance.finished_at_after_change = item[:finished_at_after_change]
+              attendance.update_attributes!(item)
+            end
         end
       end
     end
-    flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
+    flash[:success] = "1ヶ月分の勤怠変更を申請しました。"
     redirect_to user_url(date: params[:date])
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
@@ -65,7 +80,7 @@ class AttendancesController < ApplicationController
     # @day = @attendance
   end
 
-  def update_one_day_overtime_application # 1日分の残業申請
+  def update_one_day_overtime_application # 
     @user = User.find(params[:id])
     @attendance = Attendance.find_by(worked_on: params[:attendance][:date], user_id: params[:id])
     
@@ -75,7 +90,7 @@ class AttendancesController < ApplicationController
       flash[:danger] = "申請先上長を選択してください。"
     else
       @attendance.update_attributes(one_day_overtime_application_params)
-      flash[:success] = "#{@user.name}に残業を申請しました。"
+      flash[:success] = "#{User.find(params[:attendance][:overtime_application_target_superior_id]).name}に残業を申請しました。"
     end
     redirect_to user_url
   end
@@ -99,27 +114,31 @@ class AttendancesController < ApplicationController
     n2 = 0 #この階層（flashメッセージと同じ）でないとエラーになる
     n3 = 0
     ActiveRecord::Base.transaction do
-      overtime_application_notification_params.each do |id, item|
-        if item[:change] == "true" #itemの中にchangeとovertime_application_statusが入っている　文字列の形
+      attendance_change_application_notification_params.each do |id, item|
+        if item[:change_for_attendance_change] == "true" #itemの中にchangeとovertime_application_statusが入っている　文字列の形
           attendance = Attendance.find(id) #データベースの中の同じidのattendanceレコードを探してきている
             if item[:attendance_change_application_status] == "承認"
               n1 = n1 + 1
             elsif item[:attendance_change_application_status] == "否認"
               n2 = n2 + 1
+              attendance.scheduled_end_time = nil #以下で申請したattendanceレコードを空にする
+              attendance.next_day = false
+              attendance.note = nil
+              attendance.overtime_application_target_superior_id = nil
             elsif item[:attendance_change_application_status] == "なし" #勤怠が"なし"の場合、申請自体なかったことにする
               n3 = n3 + 1 #"なし"をカウントする為、104行目を含むif文は以下の"なし"の処理より上に持ってくる
               attendance.scheduled_end_time = nil #以下で申請したattendanceレコードを空にする
               attendance.next_day = false
-              attendance.business_process_content = nil
+              attendance.note = nil
               attendance.overtime_application_target_superior_id = nil
               item[:attendance_change_application_status] = "" #パラメーターとして飛んできているovertime_application_status、changeも元に戻す
-              item[:change] = "false" #paramsなので文字列
+              item[:change_for_attendance_change] = "false" #paramsなので文字列
             end
           attendance.update_attributes!(item)
         end
       end
     end
-    flash[:success] = "残業申請を#{n1}件承認、#{n2}件否認、#{n3}件取り消しました。"
+    flash[:success] = "勤怠変更申請を#{n1}件承認、#{n2}件否認、#{n3}件取り消しました。"
     redirect_to user_url
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
@@ -168,6 +187,15 @@ class AttendancesController < ApplicationController
     redirect_to user_url(date: params[:date])
   end
 
+  def attendance_change_application_confirmation_show #勤怠変更申請の確認リンク
+    @user = User.find(params[:id])
+    @attendance = Attendance.find(params[:id])
+    @first_day = params[:date].to_date.beginning_of_month
+    @last_day = @first_day.end_of_month
+    @attendances = @user.attendances.where(worked_on: @first_day..@last_day)
+    @worked_sum = @attendances.where.not(started_at: nil).count
+  end
+
   def overtime_application_confirmation_show #残業の確認リンク
     @user = User.find(params[:id])
     @attendance = Attendance.find(params[:id])
@@ -179,8 +207,15 @@ class AttendancesController < ApplicationController
 
   private
     #勤怠変更の申請
-    def overtime_application_notification_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :next_day,:attendance_change_application_target_superior_id, :attendance_change_application_status])[:attendances]
+    def attendance_change_application_params
+      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :next_day, :attendance_change_application_target_superior_id, :attendance_change_application_status])[:attendances]
+    end
+
+    #勤怠変更申請のお知らせ
+    def attendance_change_application_notification_params
+      params.require(:user).permit(change_applicant_attendances: [:started_at, :finished_at, :started_at_before_change, :finished_at_before_change, :started_at_after_change, :finished_at_after_change,
+                                                                  :note, :next_day, :change_for_attendance_change, :attendance_change_application_target_superior_id, :attendance_change_application_status])
+                                                                  [:change_applicant_attendances]
     end
 
     #1日分の残業申請

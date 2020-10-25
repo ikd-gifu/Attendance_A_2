@@ -19,15 +19,30 @@
             <h2 class="modal-title">【<%= "#{user.name}" %>からの勤怠変更申請】</h2>
               <thead>
                 <tr>
-                  <th>日付</th>
-                  <th>曜日</th>
-                  <th>終了予定時間</th>
-                  <th>指定勤務終了時間</th>
-                  <th>時間外時間</th>
-                  <th>備考</th>
-                  <th>指示者確認㊞</th>
-                  <th>変更</th>
-                  <th>勤怠を確認する</th>
+                  <th rowspan="3">日付</th>
+                  <th rowspan="3">曜日</th>
+                  <th colspan="4">変更前</th>
+                  <th colspan="4">変更後</th>
+                  <th rowspan="3">備考</th>
+                  <th rowspan="3">指示者確認㊞</th>
+                  <th rowspan="3">変更</th>
+                  <th rowspan="3">勤怠を確認する</th>
+                </tr>
+                <tr>
+                  <th colspan="2">出社</th>
+                  <th colspan="2">退社</th>
+                  <th colspan="2">出社</th>
+                  <th colspan="2">退社</th>
+                </tr>
+                <tr>
+                  <th>時</th>
+                  <th>分</th>
+                  <th>時</th>
+                  <th>分</th>
+                  <th>時</th>
+                  <th>分</th>
+                  <th>時</th>
+                  <th>分</th>
                 </tr>
               </thead>
             <% @change_applicant_attendances = @attendances.where(user_id: user.id) %>
@@ -50,24 +65,49 @@
                     </th>
                     <td class="<%= css_class %>"><%= %w{日 月 火 水 木 金 土}[day.worked_on.wday] %></td>
                     <th>
-                      <% if day.scheduled_end_time.present? %>
-                        <%= l(day.scheduled_end_time, format: :time) %>
+                      <% if day.started_at_before_change.present? %>
+                        <%= l(day.started_at_before_change, format: :hour) %>
                       <% end %>
                     </th>
                     <th>
-                      <% if user.designated_work_end_time.present? %>
-                        <%= l(user.designated_work_end_time, format: :time) %>
+                      <% if day.started_at_before_change.present? %>
+                        <%= l(day.started_at_before_change, format: :minute) %>
                       <% end %>
                     </th>
                     <th>
-                      <% if day.scheduled_end_time.present? %>
-                        <%= overtime(user.designated_work_end_time, day.next_day, day.scheduled_end_time, day.worked_on) %>
+                      <% if day.finished_at_before_change.present? %>
+                        <%= l(day.finished_at_before_change, format: :hour) %>
+                      <% end %>
+                    </th>
+                    <th>
+                      <% if day.finished_at_before_change.present? %>
+                        <%= l(day.finished_at_before_change, format: :minute) %>
+                      <% end %>
+                    </th>
+                    <th>
+                      <% if day.started_at_after_change.present? %>
+                        <%= l(day.started_at_after_change, format: :hour) %>
+                      <% end %>
+                    </th>
+                    <th>
+                      <% if day.started_at_after_change.present? %>
+                        <%= l(day.started_at_after_change, format: :minute) %>
+                      <% end %>
+                    </th>
+                    <th>
+                      <% if day.finished_at_after_change.present? %>
+                        <%= l(day.finished_at_after_change, format: :hour) %>
+                      <% end %>
+                    </th>
+                    <th>
+                      <% if day.finished_at_after_change.present? %>
+                        <%= l(day.finished_at_after_change, format: :minute) %>
                       <% end %>
                     </th>
                     <th><%= day.note %></th>
                     <th><%= change_applicant_attendance.select :attendance_change_application_status, [["承認", "承認"],["申請中", "申請中"],["否認", "否認"],["なし", "なし"]], :selected=>"申請中" %></th>
                     <th><%= change_applicant_attendance.check_box :change_for_attendance_change, {}, "true", "false" %></th>
-                    <th><%= link_to "確認", attendance_change_application_confirmation_show_user_path(user.id, date: day.worked_on), class: "btn btn-primary" %></th>
+                    <th><%= link_to "確認", attendances_attendance_change_application_confirmation_show_user_path(user.id, date: day.worked_on), class: "btn btn-primary" %></th>
                   </tr>
                   
                 </tbody>
