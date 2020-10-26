@@ -54,11 +54,12 @@ class AttendancesController < ApplicationController
               attendance.attendance_change_application_target_superior_id = item[:attendance_change_application_target_superior_id]
               attendance.attendance_change_application_status = item[:attendance_change_application_status]
               attendance.update_attributes!(item)
+              # 申請中に変更する場合の処理
             else attendance.attendance_change_application_status = "申請中" && (
                  attendance.started_at_after_change != item[:started_at_after_change] || attendance.finished_at_after_change != item[:finished_at_after_change])
               attendance.started_at_after_change = item[:started_at_after_change]
               attendance.finished_at_after_change = item[:finished_at_after_change]
-              attendance.update_attributes!(item)
+              # attendance.update_attributes!(item)
             end
         end
       end
@@ -80,7 +81,7 @@ class AttendancesController < ApplicationController
     # @day = @attendance
   end
 
-  def update_one_day_overtime_application # 
+  def update_one_day_overtime_application # 1日分の残業申請
     @user = User.find(params[:id])
     @attendance = Attendance.find_by(worked_on: params[:attendance][:date], user_id: params[:id])
     
