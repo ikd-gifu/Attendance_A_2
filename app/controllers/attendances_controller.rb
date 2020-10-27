@@ -55,8 +55,7 @@ class AttendancesController < ApplicationController
               attendance.attendance_change_application_status = item[:attendance_change_application_status]
               attendance.update_attributes!(item)
               # 申請中に変更する場合の処理
-            else attendance.attendance_change_application_status = "申請中" && (
-                 attendance.started_at_after_change != item[:started_at_after_change] || attendance.finished_at_after_change != item[:finished_at_after_change])
+            else attendance.attendance_change_application_status = "申請中" && (attendance.started_at_after_change != item[:started_at_after_change] || attendance.finished_at_after_change != item[:finished_at_after_change])
               attendance.started_at_after_change = item[:started_at_after_change]
               attendance.finished_at_after_change = item[:finished_at_after_change]
               # attendance.update_attributes!(item)
@@ -99,7 +98,7 @@ class AttendancesController < ApplicationController
     # if @attendance.update_attributes(one_day_overtime_application_params)
     #   flash[:success] = "#{@user.name}の残業申請を更新しました。"
     # else
-    #   flash[:danger] = "#{@user.name}の残業申請の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
+    #   flash[:danger] = "#{@user.name}の残業申請の更新は失��しました。<br>" + @user.errors.full_messages.join("<br>")
     # end
     # redirect_to user_url
 
@@ -214,9 +213,7 @@ class AttendancesController < ApplicationController
 
     #勤怠変更申請のお知らせ
     def attendance_change_application_notification_params
-      params.require(:user).permit(change_applicant_attendances: [:started_at, :finished_at, :started_at_before_change, :finished_at_before_change, :started_at_after_change, :finished_at_after_change,
-                                                                  :note, :next_day, :change_for_attendance_change, :attendance_change_application_target_superior_id, :attendance_change_application_status])
-                                                                  [:change_applicant_attendances]
+      params.require(:user).permit(change_applicant_attendances: [:change_for_attendance_change, :attendance_change_application_status])[:change_applicant_attendances]
     end
 
     #1日分の残業申請
