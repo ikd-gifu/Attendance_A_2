@@ -55,7 +55,7 @@ class AttendancesController < ApplicationController
               attendance.attendance_change_application_status = item[:attendance_change_application_status]
               attendance.update_attributes!(item)
               # 申請中に変更する場合の処理
-            else attendance.attendance_change_application_status = "申請中" && (attendance.started_at_after_change != item[:started_at_after_change] || attendance.finished_at_after_change != item[:finished_at_after_change])
+            else (attendance.attendance_change_application_status = "申請中") && ((attendance.started_at_after_change != item[:started_at_after_change] || attendance.finished_at_after_change != item[:finished_at_after_change]))
               attendance.started_at_after_change = item[:started_at_after_change]
               attendance.finished_at_after_change = item[:finished_at_after_change]
               # attendance.update_attributes!(item)
@@ -208,7 +208,7 @@ class AttendancesController < ApplicationController
   private
     #勤怠変更の申請
     def attendance_change_application_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :next_day, :attendance_change_application_target_superior_id, :attendance_change_application_status])[:attendances]
+      params.require(:user).permit(attendances: [:started_at, :finished_at, :started_at_after_change, :finished_at_after_change, :note, :next_day, :attendance_change_application_target_superior_id, :attendance_change_application_status])[:attendances]
     end
 
     #勤怠変更申請のお知らせ
