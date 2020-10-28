@@ -44,7 +44,7 @@ class AttendancesController < ApplicationController
       attendance_change_application_params.each do |id, item|
         if item[:attendance_change_application_target_superior_id].present? #"否認"の場合 target_superior_id は nil
           attendance = Attendance.find(id)
-            if attendance.attendance_change_application_status = nil || attendance.attendance_change_application_status = "" #"なし"含む
+            if attendance.attendance_change_application_status == nil || attendance.attendance_change_application_status == "" #"なし"含む
               attendance.started_at_before_change = attendance.started_at
               attendance.finished_at_before_change = attendance.finished_at
               attendance.started_at_after_change = item[:started_at]
@@ -55,10 +55,10 @@ class AttendancesController < ApplicationController
               attendance.attendance_change_application_status = item[:attendance_change_application_status]
               attendance.update_attributes!(item)
               # 申請中に変更する場合の処理
-            else (attendance.attendance_change_application_status = "申請中") && ((attendance.started_at_after_change != item[:started_at_after_change] || attendance.finished_at_after_change != item[:finished_at_after_change]))
+            else attendance.attendance_change_application_status == "申請中" && (attendance.started_at_after_change != item[:started_at_after_change] || attendance.finished_at_after_change != item[:finished_at_after_change])
               attendance.started_at_after_change = item[:started_at_after_change]
               attendance.finished_at_after_change = item[:finished_at_after_change]
-              # attendance.update_attributes!(item)
+              attendance.update_attributes!(item)
             end
         end
       end
