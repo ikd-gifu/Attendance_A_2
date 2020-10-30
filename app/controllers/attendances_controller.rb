@@ -44,7 +44,7 @@ class AttendancesController < ApplicationController
       attendance_change_application_params.each do |id, item|
         if item[:attendance_change_application_target_superior_id].present? #"否認"の場合 target_superior_id は nil
           attendance = Attendance.find(id)
-            if attendance.attendance_change_application_status == nil || attendance.attendance_change_application_status == "" #"なし"含む
+            if attendance.attendance_change_application_status == nil || attendance.attendance_change_application_status == "" || attendance.attendance_change_application_status == "否認" #"なし"含む
               attendance.started_at_before_change = attendance.started_at
               attendance.finished_at_before_change = attendance.finished_at
               attendance.started_at_after_change = item[:started_at]
@@ -119,18 +119,32 @@ class AttendancesController < ApplicationController
           attendance = Attendance.find(id) #データベースの中の同じidのattendanceレコードを探してきている
             if item[:attendance_change_application_status] == "承認"
               n1 = n1 + 1
+              attendance.started_at = attendance.started_at_after_change
+              attendance.finished_at = attendance.finished_at_after_change
+              attendance.dup
             elsif item[:attendance_change_application_status] == "否認"
               n2 = n2 + 1
-              attendance.scheduled_end_time = nil #以下で申請したattendanceレコードを空にする
-              attendance.next_day = false
+              attendance.started_at = attendance.started_at_before_change
+              attendance.finished_at = attendance.finished_at_before_change
+              attendance.started_at_before_change = nil
+              attendance.finished_at_before_change = nil
+              attendance.started_at_after_change = nil
+              attendance.finished_at_after_change = nil
               attendance.note = nil
-              attendance.overtime_application_target_superior_id = nil
+              # attendance.next_day = false
+              item[:change_for_attendance_change] = "false"
+              attendance.attendance_change_application_target_superior_id = nil
             elsif item[:attendance_change_application_status] == "なし" #勤怠が"なし"の場合、申請自体なかったことにする
               n3 = n3 + 1 #"なし"をカウントする為、104行目を含むif文は以下の"なし"の処理より上に持ってくる
-              attendance.scheduled_end_time = nil #以下で申請したattendanceレコードを空にする
+              attendance.started_at = attendance.started_at_before_change #以下で申請したattendanceレコードを空にする
+              attendance.finished_at = attendance.finished_at_before_change
+              attendance.started_at_before_change = nil
+              attendance.finished_at_before_change = nil
+              attendance.started_at_after_change = nil
+              attendance.finished_at_after_change = nil
               attendance.next_day = false
               attendance.note = nil
-              attendance.overtime_application_target_superior_id = nil
+              attendance.attendance_change_application_target_superior_id = nil
               item[:attendance_change_application_status] = "" #パラメーターとして飛んできているovertime_application_status、changeも元に戻す
               item[:change_for_attendance_change] = "false" #paramsなので文字列
             end
