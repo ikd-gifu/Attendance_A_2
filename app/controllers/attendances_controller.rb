@@ -98,7 +98,7 @@ class AttendancesController < ApplicationController
     # if @attendance.update_attributes(one_day_overtime_application_params)
     #   flash[:success] = "#{@user.name}の残業申請を更新しました。"
     # else
-    #   flash[:danger] = "#{@user.name}の残業申請の更新は失��しました。<br>" + @user.errors.full_messages.join("<br>")
+    #   flash[:danger] = "#{@user.name}の残業申請の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
     # end
     # redirect_to user_url
 
