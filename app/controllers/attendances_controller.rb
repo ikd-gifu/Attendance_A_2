@@ -55,10 +55,21 @@ class AttendancesController < ApplicationController
               attendance.attendance_change_application_status = item[:attendance_change_application_status]
               attendance.update_attributes!(item)
               # 申請中に変更する場合の処理
-            else attendance.attendance_change_application_status == "申請中" && (attendance.started_at_after_change != item[:started_at_after_change] || attendance.finished_at_after_change != item[:finished_at_after_change])
-              attendance.started_at_after_change = item[:started_at_after_change]
-              attendance.finished_at_after_change = item[:finished_at_after_change]
-              attendance.update_attributes!(item)
+            elsif attendance.attendance_change_application_status == "申請中"
+              if attendance.started_at_after_change != item[:started_at_after_change] || attendance.finished_at_after_change != item[:finished_at_after_change]
+                attendance.started_at_after_change = item[:started_at_after_change]
+                attendance.finished_at_after_change = item[:finished_at_after_change]
+                attendance.update_attributes!(item)
+              elsif attendance.started_at_after_change == item[:started_at_after_change] && attendance.finished_at_after_change == item[:finished_at_after_change]
+              end
+            elsif attendance.attendance_change_application_status == "承認"
+              if attendance.started_at_after_change != item[:started_at_after_change] || attendance.finished_at_after_change != item[:finished_at_after_change]
+                attendance.started_at_after_change = item[:started_at_after_change]
+                attendance.finished_at_after_change = item[:finished_at_after_change]
+                attendance.attendance_change_application_status = item[:attendance_change_application_status]
+                # attendance.update_attributes!(item)
+              elsif attendance.started_at_after_change == item[:started_at_after_change] && attendance.finished_at_after_change == item[:finished_at_after_change]
+              end
             end
         end
       end
