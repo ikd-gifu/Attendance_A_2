@@ -64,23 +64,23 @@ class AttendancesController < ApplicationController
               elsif attendance.started_at_after_change == item[:started_at_after_change] && attendance.finished_at_after_change == item[:finished_at_after_change]
               end
               # 承認済みの場合に再申請する場合の処理
-            elsif attendance.attendance_change_application_status == "承認"
-              if attendance.started_at_after_change != item[:started_at_after_change] || attendance.finished_at_after_change != item[:finished_at_after_change]
-                attendance.started_at_after_change = item[:started_at_after_change]
-                attendance.finished_at_after_change = item[:finished_at_after_change]
-                attendance.attendance_change_application_status = item[:attendance_change_application_status]
-                # attendance.update_attributes!(item)
-              # elsif attendance.started_at_after_change == item[:started_at_after_change] && attendance.finished_at_after_change == item[:finished_at_after_change]
-              end
+            # elsif attendance.attendance_change_application_status == "承認"
+            #   if attendance.started_at_after_change != item[:started_at_after_change] || attendance.finished_at_after_change != item[:finished_at_after_change]
+            #     attendance.started_at_after_change = item[:started_at_after_change]
+            #     attendance.finished_at_after_change = item[:finished_at_after_change]
+            #     attendance.attendance_change_application_status = item[:attendance_change_application_status]
+            #     # attendance.update_attributes!(item)
+            #   # elsif attendance.started_at_after_change == item[:started_at_after_change] && attendance.finished_at_after_change == item[:finished_at_after_change]
+            #   end
             elsif item[:started_at] == "" || item[:finished_at] == "" || item[:started_at_after_change] == "" || item[:finished_at_after_change] == ""
               attendance = false #出社、退社、変更後出社、変更後退社時間のいずれかがない場合は無効
               # break
             end
-        # else item[:attendance_change_application_target_superior_id].blank?
-          # if item[:started_at] == "" || item[:finished_at] == "" || item[:started_at_after_change] == "" || item[:finished_at_after_change] == ""
-            # attendance = false
+        else item[:attendance_change_application_target_superior_id].blank?
+          if item[:started_at] == "" || item[:finished_at] == "" || item[:started_at_after_change] == "" || item[:finished_at_after_change] == ""
+            attendance = false
             # break
-          # end
+          end
         end
       end
     end
