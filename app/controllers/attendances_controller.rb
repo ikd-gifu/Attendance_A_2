@@ -54,6 +54,7 @@ class AttendancesController < ApplicationController
               attendance.attendance_change_application_target_superior_id = item[:attendance_change_application_target_superior_id]
               attendance.attendance_change_application_status = item[:attendance_change_application_status]
               attendance.update_attributes!(item)
+              
               # 申請中に変更する場合の処理
             elsif attendance.attendance_change_application_status == "申請中" || attendance.attendance_change_application_status == "承認"
               if ((attendance.started_at_after_change.hour != item[:started_at_after_change].to_time.hour) || (attendance.started_at_after_change.min != item[:started_at_after_change].to_time.min)) || ((attendance.finished_at_after_change.hour != item[:finished_at_after_change].to_time.hour) || (attendance.finished_at_after_change.min != item[:finished_at_after_change].to_time.min))
