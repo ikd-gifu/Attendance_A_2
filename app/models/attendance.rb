@@ -23,7 +23,7 @@ class Attendance < ApplicationRecord
   validate :started_at_is_invalid_without_a_finished_at
   
   #指示者確認が選択されていない場合は無効
-  validate :superior_not_selected_if_invalid
+  # validate :superior_not_selected_if_invalid
 
   def finished_at_is_invalid_without_a_started_at
     errors.add(:started_at, "が必要です") if started_at.blank? && finished_at.present?
@@ -43,13 +43,13 @@ class Attendance < ApplicationRecord
     end
   end
   
-  def superior_not_selected_if_invalid
-    if ((started_at.present? && finished_at.present?) || (started_at_after_change.present? && finished_at_after_change.present?)) && attendance_change_application_status == "申請中"
-      unless Date.current == worked_on
-        unless attendance_change_application_target_superior_id.present?
-          errors.add(:attendance_change_application_target_superior_id, "上長を選択してください")
-        end
-      end
-    end
-  end
+  # def superior_not_selected_if_invalid
+  #   if ((started_at.present? && finished_at.present?) || (started_at_after_change.present? && finished_at_after_change.present?)) && attendance_change_application_status == "申請中"
+  #     unless Date.current == worked_on
+  #       unless attendance_change_application_target_superior_id.present?
+  #         errors.add(:attendance_change_application_target_superior_id, "上長を選択してください")
+  #       end
+  #     end
+  #   end
+  # end
 end
