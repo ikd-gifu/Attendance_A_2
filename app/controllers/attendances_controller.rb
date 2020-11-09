@@ -45,22 +45,27 @@ class AttendancesController < ApplicationController
         if item[:attendance_change_application_target_superior_id].present? #"否認"の場合 target_superior_id は nil
           attendance = Attendance.find(id)
             if attendance.attendance_change_application_status == nil || attendance.attendance_change_application_status == "" || attendance.attendance_change_application_status == "否認" #"なし"含む
-              attendance.started_at_before_change = attendance.started_at
-              attendance.finished_at_before_change = attendance.finished_at #未申請、否認、無しの場合に申請する場合の処理
-              attendance.started_at_after_change = item[:started_at]
-              attendance.finished_at_after_change = item[:finished_at]
-              attendance.next_day = item[:next_day]
-              attendance.note = item[:note]
-              attendance.attendance_change_application_target_superior_id = item[:attendance_change_application_target_superior_id]
-              attendance.attendance_change_application_status = item[:attendance_change_application_status]
-              attendance.update_attributes!(item)
-              
+              if item[:started_at_after_change] == "" || item[:finished_at_after_change] == ""
+                attendance = false
+              elsif item[:started_at_after_change].present? && item[:finished_at_after_change].present?
+                attendance.started_at_before_change = attendance.started_at
+                attendance.finished_at_before_change = attendance.finished_at #未申請、否認、無しの場合に申請する場合の処理
+                attendance.started_at_after_change = item[:started_at]
+                attendance.finished_at_after_change = item[:finished_at]
+                attendance.next_day = item[:next_day]
+                attendance.note = item[:note]
+                attendance.attendance_change_application_target_superior_id = item[:attendance_change_application_target_superior_id]
+                attendance.attendance_change_application_status = item[:attendance_change_application_status]
+                attendance.update_attributes!(item)
+              end
               # 申請中に変更する場合の処理
             elsif attendance.attendance_change_application_status == "申請中" || attendance.attendance_change_application_status == "承認"
-              if ((attendance.started_at_after_change.hour != item[:started_at_after_change].to_time.hour) || (attendance.started_at_after_change.min != item[:started_at_after_change].to_time.min)) || ((attendance.finished_at_after_change.hour != item[:finished_at_after_change].to_time.hour) || (attendance.finished_at_after_change.min != item[:finished_at_after_change].to_time.min))
-                attendance.started_at_after_change = item[:started_at_after_change]
-                attendance.finished_at_after_change = item[:finished_at_after_change]
-                attendance.update_attributes!(item)
+              if item[:started_at_after_change] == "" || item[:finished_at_after_change] == ""
+                attendance = false #変更後出社、変更後退社時間のいずれかがない場合は無効
+              elsif ((attendance.started_at_after_change.hour != item[:started_at_after_change].to_time.hour) || (attendance.started_at_after_change.min != item[:started_at_after_change].to_time.min)) || ((attendance.finished_at_after_change.hour != item[:finished_at_after_change].to_time.hour) || (attendance.finished_at_after_change.min != item[:finished_at_after_change].to_time.min))
+                  attendance.started_at_after_change = item[:started_at_after_change]
+                  attendance.finished_at_after_change = item[:finished_at_after_change]
+                  attendance.update_attributes!(item)
               elsif attendance.started_at_after_change == item[:started_at_after_change] && attendance.finished_at_after_change == item[:finished_at_after_change]
               end
               # 承認済みの場合に再申請する場合の処理
