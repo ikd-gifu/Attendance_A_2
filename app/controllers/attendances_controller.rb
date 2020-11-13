@@ -47,7 +47,7 @@ class AttendancesController < ApplicationController
             if attendance.attendance_change_application_status == nil || attendance.attendance_change_application_status == "" || attendance.attendance_change_application_status == "否認" #"なし"含む
               # if item[:started_at] == "" || item[:finished_at] == "" || item[:started_at_after_change] == "" || item[:finished_at_after_change] == ""
                 # attendance = false
-              if item[:started_at_after_change].present? && item[:finished_at_after_change].present?
+              # if item[:started_at_after_change].present? && item[:finished_at_after_change].present?
                 attendance.started_at_before_change = attendance.started_at
                 attendance.finished_at_before_change = attendance.finished_at #未申請、否認、無しの場合に申請する場合の処理
                 attendance.started_at_after_change = item[:started_at]
@@ -57,7 +57,7 @@ class AttendancesController < ApplicationController
                 attendance.attendance_change_application_target_superior_id = item[:attendance_change_application_target_superior_id]
                 attendance.attendance_change_application_status = item[:attendance_change_application_status]
                 attendance.update_attributes!(item)
-              end
+              # end
               # 申請中に変更する場合の処理
             elsif attendance.attendance_change_application_status == "申請中" || attendance.attendance_change_application_status == "承認"
               if item[:started_at] == "" || item[:finished_at] == "" || item[:started_at_after_change] == "" || item[:finished_at_after_change] == ""
@@ -65,6 +65,7 @@ class AttendancesController < ApplicationController
               elsif ((attendance.started_at_after_change.hour != item[:started_at_after_change].to_time.hour) || (attendance.started_at_after_change.min != item[:started_at_after_change].to_time.min)) || ((attendance.finished_at_after_change.hour != item[:finished_at_after_change].to_time.hour) || (attendance.finished_at_after_change.min != item[:finished_at_after_change].to_time.min))
                   attendance.started_at_after_change = item[:started_at_after_change]
                   attendance.finished_at_after_change = item[:finished_at_after_change]
+                  attendance.next_day = item[:next_day]
                   attendance.update_attributes!(item)
               elsif attendance.started_at_after_change == item[:started_at_after_change] && attendance.finished_at_after_change == item[:finished_at_after_change]
               end
@@ -157,7 +158,7 @@ class AttendancesController < ApplicationController
               attendance.started_at_after_change = nil
               attendance.finished_at_after_change = nil
               attendance.note = nil
-              # attendance.next_day = false
+              attendance.next_day = false
               item[:change_for_attendance_change] = "false"
               attendance.attendance_change_application_target_superior_id = nil
             elsif item[:attendance_change_application_status] == "なし" #勤怠が"なし"の場合、申請自体なかったことにする
