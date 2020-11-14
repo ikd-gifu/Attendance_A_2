@@ -60,7 +60,7 @@ class AttendancesController < ApplicationController
               # end
               # 申請中に変更する場合の処理
             elsif attendance.attendance_change_application_status == "申請中" || attendance.attendance_change_application_status == "承認"
-              if item[:started_at] == "" || item[:finished_at] == "" || item[:started_at_after_change] == "" || item[:finished_at_after_change] == ""
+              if item[:started_at] == "" || item[:finished_at] == "" || item[:started_at_after_change] == "" || item[:finished_at_after_change] == "" || item[:started_at_after_change] == nil || item[:finished_at_after_change] == nil
                 attendance = false #変更後出社、変更後退社時間のいずれかがない場合は無効
               elsif ((attendance.started_at_after_change.hour != item[:started_at_after_change].to_time.hour) || (attendance.started_at_after_change.min != item[:started_at_after_change].to_time.min)) || ((attendance.finished_at_after_change.hour != item[:finished_at_after_change].to_time.hour) || (attendance.finished_at_after_change.min != item[:finished_at_after_change].to_time.min))
                   attendance.started_at_after_change = item[:started_at_after_change]
@@ -148,6 +148,7 @@ class AttendancesController < ApplicationController
               n1 = n1 + 1
               attendance.started_at = attendance.started_at_after_change
               attendance.finished_at = attendance.finished_at_after_change
+              attendance.update_attributes!(item)
               attendance.dup
             elsif item[:attendance_change_application_status] == "否認"
               n2 = n2 + 1
@@ -161,6 +162,7 @@ class AttendancesController < ApplicationController
               attendance.next_day = false
               item[:change_for_attendance_change] = "false"
               attendance.attendance_change_application_target_superior_id = nil
+              attendance.update_attributes!(item)
             elsif item[:attendance_change_application_status] == "なし" #勤怠が"なし"の場合、申請自体なかったことにする
               n3 = n3 + 1 #"なし"をカウントする為、104行目を含むif文は以下の"なし"の処理より上に持ってくる
               attendance.started_at = attendance.started_at_before_change #以下で申請したattendanceレコードを空にする
@@ -174,8 +176,9 @@ class AttendancesController < ApplicationController
               attendance.attendance_change_application_target_superior_id = nil
               item[:attendance_change_application_status] = "" #パラメーターとして飛んできているovertime_application_status、changeも元に戻す
               item[:change_for_attendance_change] = "false" #paramsなので文字列
+              attendance.update_attributes!(item)
             end
-          attendance.update_attributes!(item)
+          # attendance.update_attributes!(item)
         end
       end
     end
