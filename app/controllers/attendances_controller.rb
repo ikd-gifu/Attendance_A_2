@@ -149,7 +149,10 @@ class AttendancesController < ApplicationController
               attendance.started_at = attendance.started_at_after_change
               attendance.finished_at = attendance.finished_at_after_change
               attendance.update_attributes!(item)
-              attendance.dup
+              if attendance.attendance_change_application_status == "承認" && attendance.attendance_change_application_target_superior_id.present? && attendance.change_for_attendance_change == true
+                attendance = attendance.dup
+                # attendance.save
+              end
             elsif item[:attendance_change_application_status] == "否認"
               n2 = n2 + 1
               attendance.started_at = attendance.started_at_before_change
@@ -178,10 +181,18 @@ class AttendancesController < ApplicationController
               item[:change_for_attendance_change] = "false" #paramsなので文字列
               attendance.update_attributes!(item)
             end
-          # attendance.update_attributes!(item)
         end
       end
     end
+      # ActiveRecord::Base.transaction do # トランザクションを開始します。
+      #   attendance_change_application_notification_params.each do |id,item|
+      #     attendance = Attendance.find(id)
+      #     if attendance.attendance_change_application_status == "承認" && attendance.attendance_change_application_target_superior_id.present? && attendance.change_for_attendance_change == "true"
+      #       attendance = attendance.dup
+      #       attendance.save
+      #     end
+      #   end
+      # end
     flash[:success] = "勤怠変更申請を#{n1}件承認、#{n2}件否認、#{n3}件取り消しました。"
     redirect_to user_url
   rescue ActiveRecord::RecordInvalid
