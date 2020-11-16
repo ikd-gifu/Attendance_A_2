@@ -151,7 +151,7 @@ class AttendancesController < ApplicationController
               attendance.update_attributes!(item)
               if attendance.attendance_change_application_status == "承認" && attendance.attendance_change_application_target_superior_id.present? && attendance.change_for_attendance_change == true
                 attendance = attendance.dup
-                # attendance.save
+                attendance.save
               end
             elsif item[:attendance_change_application_status] == "否認"
               n2 = n2 + 1
