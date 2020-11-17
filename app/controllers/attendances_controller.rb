@@ -44,7 +44,7 @@ class AttendancesController < ApplicationController
       attendance_change_application_params.each do |id, item|
         if item[:attendance_change_application_target_superior_id].present? #"否認"の場合 target_superior_id は nil
           attendance = Attendance.find(id)
-            if attendance.attendance_change_application_status == nil || attendance.attendance_change_application_status == "" || attendance.attendance_change_application_status == "否認" #"なし"含む
+            if attendance.attendance_change_application_status == blank? || attendance.attendance_change_application_status == "否認" #"なし"含む
               # if item[:started_at] == "" || item[:finished_at] == "" || item[:started_at_after_change] == "" || item[:finished_at_after_change] == ""
                 # attendance = false
               # if item[:started_at_after_change].present? && item[:finished_at_after_change].present?
