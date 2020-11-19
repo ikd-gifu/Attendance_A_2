@@ -44,7 +44,7 @@ class AttendancesController < ApplicationController
       attendance_change_application_params.each do |id, item|
         if item[:attendance_change_application_target_superior_id].present? #"否認"の場合 target_superior_id は nil
           attendance = Attendance.find(id)
-            if attendance.attendance_change_application_status == blank? || attendance.attendance_change_application_status == "否認" #"なし"含む
+            if attendance.attendance_change_application_status == nil || attendance.attendance_change_application_status == "" || attendance.attendance_change_application_status == "否認" #"なし"含む
               # if item[:started_at] == "" || item[:finished_at] == "" || item[:started_at_after_change] == "" || item[:finished_at_after_change] == ""
                 # attendance = false
               # if item[:started_at_after_change].present? && item[:finished_at_after_change].present?
@@ -149,10 +149,10 @@ class AttendancesController < ApplicationController
               attendance.started_at = attendance.started_at_after_change
               attendance.finished_at = attendance.finished_at_after_change
               attendance.update_attributes!(item)
-              if attendance.attendance_change_application_status == "承認" && attendance.attendance_change_application_target_superior_id.present? && attendance.change_for_attendance_change == true
-                attendance = attendance.dup
-                attendance.save
-              end
+              # if attendance.attendance_change_application_status == "承認" && attendance.attendance_change_application_target_superior_id.present? && attendance.change_for_attendance_change == true
+              #   attendance = attendance.dup
+              #   attendance.save
+              # end
             elsif item[:attendance_change_application_status] == "否認"
               n2 = n2 + 1
               attendance.started_at = attendance.started_at_before_change
