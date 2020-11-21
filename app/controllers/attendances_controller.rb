@@ -48,8 +48,10 @@ class AttendancesController < ApplicationController
               # if item[:started_at] == "" || item[:finished_at] == "" || item[:started_at_after_change] == "" || item[:finished_at_after_change] == ""
                 # attendance = false
               # if item[:started_at_after_change].present? && item[:finished_at_after_change].present?
-                attendance.started_at_before_change = attendance.started_at
-                attendance.finished_at_before_change = attendance.finished_at #未申請、否認、無しの場合に申請する場合の処理
+                # if attendance.started_at_before_change == nil && attendance.finished_at_before_change == nil
+                  attendance.started_at_before_change = attendance.started_at
+                  attendance.finished_at_before_change = attendance.finished_at #未申請、否認、無しの場合に申請する場合の処理
+                # end
                 attendance.started_at_after_change = item[:started_at]
                 attendance.finished_at_after_change = item[:finished_at]
                 attendance.next_day = item[:next_day]
@@ -63,10 +65,14 @@ class AttendancesController < ApplicationController
               if item[:started_at] == "" || item[:finished_at] == "" || item[:started_at_after_change] == "" || item[:finished_at_after_change] == "" || item[:started_at_after_change] == nil || item[:finished_at_after_change] == nil
                 attendance = false #変更後出社、変更後退社時間のいずれかがない場合は無効
               elsif ((attendance.started_at_after_change.hour != item[:started_at_after_change].to_time.hour) || (attendance.started_at_after_change.min != item[:started_at_after_change].to_time.min)) || ((attendance.finished_at_after_change.hour != item[:finished_at_after_change].to_time.hour) || (attendance.finished_at_after_change.min != item[:finished_at_after_change].to_time.min))
-                  attendance.started_at_after_change = item[:started_at_after_change]
-                  attendance.finished_at_after_change = item[:finished_at_after_change]
-                  attendance.next_day = item[:next_day]
-                  attendance.update_attributes!(item)
+                if attendance.started_at_before_change == nil && attendance.finished_at_before_change == nil
+                  attendance.started_at_before_change = attendance.started_at
+                  attendance.finished_at_before_change = attendance.finished_at
+                end
+                attendance.started_at_after_change = item[:started_at_after_change]
+                attendance.finished_at_after_change = item[:finished_at_after_change]
+                attendance.next_day = item[:next_day]
+                attendance.update_attributes!(item)
               elsif attendance.started_at_after_change == item[:started_at_after_change] && attendance.finished_at_after_change == item[:finished_at_after_change]
               end
               # 承認済みの場合に再申請する場合の処理
