@@ -265,6 +265,9 @@ class AttendancesController < ApplicationController
     @attendances = @user.attendances.where(worked_on: @first_day..@last_day)
     @worked_sum = @attendances.where.not(started_at: nil).count
   end
+  
+  def attendance_modifying_log
+  end
 
   private
     #勤怠変更の申請

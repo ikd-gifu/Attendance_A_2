@@ -27,6 +27,7 @@ Rails.application.routes.draw do
       get 'attendances/edit_attendance_change_application_notification'
       patch 'attendances/update_attendance_change_application_notification'
       get 'attendances/attendance_change_application_confirmation_show'
+      get 'attendances/attendance_modifying_log'
     end
     resources :attendances, only: :update
   end
