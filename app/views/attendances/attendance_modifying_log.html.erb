@@ -1,0 +1,59 @@
+<% provide(:title, 'Attendance Log') %>
+<% provide(:button_text, '検索') %>
+<h1>勤怠修正ログ</h1>
+
+<%= form_with(model: @user, url:attendances_attendance_modifying_log_user_path(@user, date: @first_day), local: true, method: :get) do |f| %>
+
+  <%= f.submit yield(:button_text), class: "btn btn-primary btn-#{yield(:class_text)}" %>
+
+    <!--< %= f.time_select :year, {include_blank: true, discard_day: true, use_month_numbers: true}, {class: 'time-box'} %>-->
+    <%= select_year(Date.today, :start_year => Date.today.year, :end_year => 5.year.before.year, :include_blank => true) %>
+    <%= select_month(Date.today, {include_blank: true}) %>
+
+    <table class="table table-bordered table-striped table-hover">
+
+        <thead>
+          <tr>
+            <th>日付</th>
+            <th>変更前出社時間</th>
+            <th>変更前退社時間</th>
+            <th>変更後出社時間</th>
+            <th>変更後退社時間</th>
+            <th>承認者</th>
+          </tr>
+        </thead>
+      
+      <% @attendance_logs.each do |day| %>
+        <%= f.fields_for "attendance_log[]", day do |attendance_log| %>
+          <tbody>
+            <tr>
+              <% css_class =
+                case %w{日 月 火 水 木 金 土}[day.worked_on.wday]
+                when '土'
+                  'text-primary'
+                when '日'
+                  'text-danger'
+                end
+              %>
+              <th><%= l(day.worked_on, format: :short) %></th>
+              <td class="<%= css_class %>"><%= %w{日 月 火 水 木 金 土}[day.worked_on.wday] %></td>
+              <th><%= l(day.scheduled_end_time, format: :time) %></th>
+              <th><%= l(user.designated_work_end_time, format: :time) %></th>
+              <th>
+                <% if day.scheduled_end_time.present? %>
+                  <%= overtime(user.designated_work_end_time, day.next_day, day.scheduled_end_time, day.worked_on) %>
+                <% end %>
+              </th>
+              <th><%= day.business_process_content %></th>
+              <th><%= applicant_attendance.select :overtime_application_status, [["承認", "承認"],["申請中", "申請中"],["否認", "否認"],["なし", "なし"]], :selected=>"申請中" %></th>
+            </tr>
+            
+          </tbody>
+        <% end %>
+      <% end %>
+      
+    </table>
+
+  <%# テーブルの中に入れるとボタンが動作しなくなる・テーブルをテーブルの中に入れ子にしない %>
+  <!--< %= f.submit yield(:button_text), class: "btn btn-primary btn-#{yield(:class_text)}" %>-->
+<% end %>
