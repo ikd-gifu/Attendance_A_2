@@ -267,8 +267,9 @@ class AttendancesController < ApplicationController
   end
   
   def attendance_modifying_log
-    # @first_day = params[:date].to_date.beginning_of_month
-    # @last_day = @first_day.end_of_month
+    # debugger
+    @first_day = params[:date].to_date.beginning_of_month
+    @last_day = @first_day.end_of_month
     @attendance = @user.attendances.where(worked_on: @first_day..@last_day)
     @attendance_logs = @attendance.where(user_id: @user.id, attendance_change_application_status: "承認")
   end

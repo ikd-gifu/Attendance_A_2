@@ -39,17 +39,19 @@
                   'text-danger'
                 end
               %>
-              <th><%= l(day.worked_on, format: :short) %></th>
-              <td class="<%= css_class %>"><%= %w{日 月 火 水 木 金 土}[day.worked_on.wday] %></td>
-              <th><%= l(day.scheduled_end_time, format: :time) %></th>
-              <th><%= l(user.designated_work_end_time, format: :time) %></th>
-              <th>
-                <% if day.scheduled_end_time.present? %>
-                  <%= overtime(user.designated_work_end_time, day.next_day, day.scheduled_end_time, day.worked_on) %>
-                <% end %>
-              </th>
-              <th><%= day.business_process_content %></th>
-              <th><%= applicant_attendance.select :overtime_application_status, [["承認", "承認"],["申請中", "申請中"],["否認", "否認"],["なし", "なし"]], :selected=>"申請中" %></th>
+              <th><%= l(day.worked_on) %></th>
+              <!--<td class="< %= css_class %>"><%= %w{日 月 火 水 木 金 土}[day.worked_on.wday] %></td>-->
+              <% if day.started_at_before_change.present? && day.finished_at_before_change.present? %>
+                <th><%= l(day.started_at_before_change, format: :time) %></th>
+                <th><%= l(day.finished_at_before_change, format: :time) %></th>
+              <% else %>
+                <th></th>
+                <th></th>
+              <% end %>
+              <th></th>
+              <th></th>
+              <th><%= day.attendance_change_application_target_superior_id %></th>
+              <!--<th>< %= applicant_attendance.select :overtime_application_status, [["承認", "承認"],["申請中", "申請中"],["否認", "否認"],["なし", "なし"]], :selected=>"申請中" %></th>-->
             </tr>
             
           </tbody>
