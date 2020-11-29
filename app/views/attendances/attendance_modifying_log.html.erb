@@ -8,10 +8,10 @@
 
     <!--< %= f.time_select :year, {include_blank: true, discard_day: true, use_month_numbers: true}, {class: 'time-box'} %>-->
     <div>
-      <%= select_year(Date.today, :start_year => Date.today.year, :end_year => 5.year.before.year, :include_blank => true) %>
+      <%= select_year(@selected_year, :start_year => @start_year, :end_year => @end_year, :include_blank => true) %>
     </div>
     <div>
-      <%= select_month(Date.today, {include_blank: true}) %>
+      <%= select_month(@selected_year.month, {include_blank: true}) %>
     </div>
 
     <table class="table table-bordered table-striped table-hover">

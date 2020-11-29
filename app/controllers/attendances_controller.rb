@@ -267,20 +267,25 @@ class AttendancesController < ApplicationController
   end
   
   def attendance_modifying_log
-    # debugger
-    if params[:date].present?
-      # unless params[:date][:year].present?
-        @first_day = params[:date].to_date.beginning_of_month
-        @last_day = @first_day.end_of_month
-        @attendance = @user.attendances.where(worked_on: @first_day..@last_day)
-        @attendance_logs = @attendance.where(user_id: @user.id, attendance_change_application_status: "承認")
-      # end
-    elsif params[:date][:year].present? && params[:date][:month].present?
+    
+    if Attendance.where(user_id: @user.id).where.not(worked_on: nil).present?
+      @start_year =  Attendance.where(user_id: @user.id).minimum(:worked_on).year
+      @end_year = Attendance.where(user_id: @user.id).maximum(:worked_on).year
+    end
+    
+    if params[:date][0].present?
+      @first_day = params[:date].to_date.beginning_of_month
+      @last_day = @first_day.end_of_month
+      @attendance = @user.attendances.where(worked_on: @first_day..@last_day)
+      @attendance_logs = @attendance.where(user_id: @user.id, attendance_change_application_status: "承認")
+      @selected_year = params[:date].to_date
+    else
       params[:date] = params[:date][:year] + "-" + params[:date][:month] + "-" + "01"
       @first_day = params[:date].to_date.beginning_of_month
       @last_day = @first_day.end_of_month
       @attendance = @user.attendances.where(worked_on: @first_day..@last_day)
       @attendance_logs = @attendance.where(user_id: @user.id, attendance_change_application_status: "承認")
+      @selected_year = params[:date].to_date
     end
     # if params[:date][:year].present? && params[:date][:month].present?
     #   params[:date] = params[:date][:year] + "-" + params[:date][:month] + "-" + "01"
