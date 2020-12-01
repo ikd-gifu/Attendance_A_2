@@ -7,24 +7,31 @@
   <%= f.submit yield(:button_text), class: "btn btn-primary btn-#{yield(:class_text)}" %>
 
     <!--< %= f.time_select :year, {include_blank: true, discard_day: true, use_month_numbers: true}, {class: 'time-box'} %>-->
-    <!--<div>-->
-    <table>
-      <tr>
-        <th>年▼</th>
-        <th>
-          <%= select_year(@selected_year, :start_year => @start_year, :end_year => @end_year, :include_blank => true) %>
-        </th>
-      <tr>
-    <!--</div>-->
-    <!--<div>-->
-      <tr>
-        <th>月▼</th>
-        <th>
-          <%= select_month(@selected_year, include_blank: true) %>
-        </th>
-      </tr>
-    </table>
-    <!--</div>-->
+    <!--<table>-->
+    <!--  <tr>-->
+    <!--    <th>年▼</th>-->
+    <!--    <th>-->
+    <!--      < %= select_year(@selected_year, :start_year => @start_year, :end_year => @end_year, :include_blank => true) %>-->
+    <!--    </th>-->
+    <!--  <tr>-->
+    <!--  <tr>-->
+    <!--    <th>月▼</th>-->
+    <!--    <th>-->
+    <!--      < %= select_month(@selected_year, include_blank: true) %>-->
+    <!--    </th>-->
+    <!--  </tr>-->
+    <!--</table>-->
+    
+    <div>
+      <div>年▼
+        <%= select_year(@selected_year, :start_year => @start_year, :end_year => @end_year, :include_blank => true) %>
+      </div>
+    </div>
+    <div>
+      <div>月▼
+        <%= select_month(@selected_year, include_blank: true) %>
+      </div>
+    </div>
 
     <table class="table table-bordered table-striped table-hover">
 
