@@ -248,7 +248,7 @@ class AttendancesController < ApplicationController
     redirect_to user_url(date: params[:date])
   end
 
-  def affiliation_manager_approval_application #所属長承認申請
+  def edit_affiliation_manager_approval_application #所属長承認申請
   end
 
   def attendance_change_application_confirmation_show #勤怠変更申請の確認リンク

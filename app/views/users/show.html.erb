@@ -185,7 +185,7 @@
           <%= form_for @user do |f| %>
             <%= f.collection_select :name, User.where(superior: true), :name, :name, :prompt => "上長を選択してください。" %>
           <% end %>
-          <%= link_to "申請", user_path(date: @first_day.next_month), class: "btn btn-primary" %>
+          <%= link_to "申請", attendances_edit_affiliation_manager_approval_application_user_path(date: @first_day.month), class: "btn btn-primary" %>
         </td>
       </tr>
       <tr>
