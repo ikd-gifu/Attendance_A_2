@@ -36,6 +36,8 @@ class UsersController < ApplicationController
         @overtime_application_count = @target_superior_user_attendances.where(overtime_application_status: "申請中").count
         @target_superior_user_for_change_attendances = Attendance.all.where(attendance_change_application_target_superior_id: params[:id])
         @attendance_change_application_count = @target_superior_user_for_change_attendances.where(attendance_change_application_status: "申請中").count
+        @target_superior_user_for_affiliation_manager_approval_application_attendances = Attendance.all.where(affiliation_manager_approval_application_target_superior_id: params[:id])
+        @affiliation_manager_approval_application_count = @target_superior_user_for_affiliation_manager_approval_application_attendances.where(affiliation_manager_approval_application_status: "申請中").count
       end
     end
   end
