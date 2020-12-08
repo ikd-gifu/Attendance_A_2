@@ -29,7 +29,16 @@
 <ul class = "infomation">
   <% if current_user.superior? %>
     <li>
-      <p>【所属長承認申請のお知らせ】</p>
+      <% if @affiliation_manager_approval_application_count >= 1 %>
+        <p class = "notification">
+        【所属長承認申請のお知らせ】
+        <%= link_to "#{@affiliation_manager_approval_application_count}件の通知があります",
+        attendances_edit_affiliation_manager_approval_application_notification_user_path, remote: true, class: "box1" 
+        %>
+        </p>
+      <% else %>
+        <p>【所属長承認申請のお知らせ】</p>
+      <% end %>
     </li>
     <li>
       <% if @attendance_change_application_count >= 1 %>
@@ -205,3 +214,5 @@
 <div id="edit_overtime_application_notification" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <!--勤怠変更申請のおしらせ-->
 <div id="edit_attendance_change_application_notification" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<!--所属長承認申請のおしらせ-->
+<div id="edit_affiliation_manager_approval_application_notification" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
