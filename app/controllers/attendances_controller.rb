@@ -250,7 +250,17 @@ class AttendancesController < ApplicationController
     redirect_to user_url(date: params[:date])
   end
 
-  def edit_affiliation_manager_approval_application #所属長承認申請
+  def update_affiliation_manager_approval_application #所属長承認申請
+    @user = User.find(params[:id])
+    # @attendance = Attendance.find_by(worked_on: params[:attendance][:date], user_id: params[:id])
+  # debugger
+    if params[:affiliation_manager_approval_application_target_superior_id] == ""
+      flash[:danger] = "申請先上長を選択してください。"
+      redirect_to user_url
+    else
+      flash[:success] = "#{params[:date].to_date.month}月分の所属長承認申請を行いました。"
+      redirect_to user_url
+    end
   end
 
   def attendance_change_application_confirmation_show #勤怠変更申請の確認リンク
@@ -325,6 +335,11 @@ class AttendancesController < ApplicationController
      #残業申請のお知らせ
     def overtime_application_notification_params
       params.require(:user).permit(applicant_attendances: [:change, :overtime_application_status])[:applicant_attendances]
+    end
+    
+    #所属長承認申請
+    def affiliation_manager_approval_application_params
+      params.require(:attendance).permit(:affiliation_manager_approval_application_target_superior_id, :affiliation_manager_approval_application_status)
     end
 
   def admin_or_correct_user
