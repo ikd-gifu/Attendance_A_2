@@ -252,12 +252,14 @@ class AttendancesController < ApplicationController
 
   def update_affiliation_manager_approval_application #所属長承認申請
     @user = User.find(params[:id])
+    @attendance = @user.attendances.find_by(params[:date])
     # @attendance = Attendance.find_by(worked_on: params[:attendance][:date], user_id: params[:id])
   # debugger
     if params[:affiliation_manager_approval_application_target_superior_id] == ""
       flash[:danger] = "申請先上長を選択してください。"
       redirect_to user_url
     else
+      @attendance.update_attributes(affiliation_manager_approval_application_params)
       flash[:success] = "#{params[:date].to_date.month}月分の所属長承認申請を行いました。"
       redirect_to user_url
     end

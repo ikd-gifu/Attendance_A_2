@@ -39,6 +39,7 @@ class UsersController < ApplicationController
         @target_superior_user_for_affiliation_manager_approval_application_attendances = Attendance.all.where(affiliation_manager_approval_application_target_superior_id: params[:id])
         @affiliation_manager_approval_application_count = @target_superior_user_for_affiliation_manager_approval_application_attendances.where(affiliation_manager_approval_application_status: "申請中").count
         @selected_superior_users = User.where(superior: true).where.not(id: @user.id)
+        @approval_attendance = @user.attendances.find_by(params[:date])
       end
     end
   end
