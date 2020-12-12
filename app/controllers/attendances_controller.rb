@@ -265,6 +265,11 @@ class AttendancesController < ApplicationController
     end
   end
 
+  def edit_affiliation_manager_approval_application_notification #所属長承認申請のお知らせ
+    @attendances = Attendance.where(affiliation_manager_approval_application_target_superior_id: params[:id], affiliation_manager_approval_application_status: "申請中")
+    @users = User.joins(:attendances).group("users.id").where(attendances:{affiliation_manager_approval_application_status: "申請中"}).where.not(attendances:{user_id: params[:id]})
+  end
+
   def attendance_change_application_confirmation_show #勤怠変更申請の確認リンク
     @user = User.find(params[:id])
     @attendance = Attendance.find(params[:id])

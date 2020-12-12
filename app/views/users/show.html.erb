@@ -191,13 +191,13 @@
         <td colspan="5", rowspan="2"></td>
         <td rowspan="2">
           <p>所属長承認</p>
-          <%= form_with(model: @approval_attendance, url: attendances_update_affiliation_manager_approval_application_user_path(date: @first_day), local: true, method: :patch) do |f| %>
-            <%= f.collection_select(:affiliation_manager_approval_application_target_superior_id, @selected_superior_users, :id, :name, {prompt: ""}) %>
-            <%= f.hidden_field :affiliation_manager_approval_application_status, :value => "申請中"  %>
-            <div class="center">
-              <%= f.submit "申請", class: "btn btn-primary" %>
-            </div>
-          <% end %>
+            <%= form_with(model: @approval_attendance, url: attendances_update_affiliation_manager_approval_application_user_path(date: @first_day), local: true, method: :patch) do |f| %>
+              <%= f.collection_select(:affiliation_manager_approval_application_target_superior_id, @selected_superior_users, :id, :name, {prompt: ""}) %>
+              <%= f.hidden_field :affiliation_manager_approval_application_status, :value => "申請中"  %>
+              <div class="center">
+                <%= f.submit "申請", class: "btn btn-primary" %>
+              </div>
+            <% end %>
         </td>
       </tr>
       <tr>

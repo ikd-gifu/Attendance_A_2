@@ -30,6 +30,7 @@ Rails.application.routes.draw do
       get 'attendances/attendance_modifying_log'
       patch 'attendances/update_affiliation_manager_approval_application'
       get 'attendances/edit_affiliation_manager_approval_application_notification'
+      patch 'attendances/update_affiliation_manager_approval_application_notification'
     end
     resources :attendances, only: :update
   end
