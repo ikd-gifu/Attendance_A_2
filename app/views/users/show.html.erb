@@ -190,10 +190,14 @@
         <td>累計在社時間</td>
         <td colspan="5", rowspan="2"></td>
         <td rowspan="2">
-          <p>所属長承認　未</p>
-            <% if Attendance.find_by(worked_on: @first_day, user_id: params[:id], affiliation_manager_approval_application_status: "申請中").present? %>
-              <%= Attendance.find_by(worked_on: @first_day, user_id: params[:id], affiliation_manager_approval_application_status: "申請中").worked_on %>
-            <% end %>
+          <% if Attendance.find_by(worked_on: @first_day, user_id: params[:id], affiliation_manager_approval_application_status: "申請中").present? %>
+            <p>
+              <%= User.find_by(id: Attendance.find_by(worked_on: @first_day, user_id: params[:id], affiliation_manager_approval_application_status: "申請中").affiliation_manager_approval_application_target_superior_id).name %>
+              に所属長承認申請中
+            </p>
+          <% else %>
+            <p>所属長承認　未</p>
+          <% end %>
             <%= form_with(model: @approval_attendance, url: attendances_update_affiliation_manager_approval_application_user_path(date: @first_day), local: true, method: :patch) do |f| %>
               <%= f.collection_select(:affiliation_manager_approval_application_target_superior_id, @selected_superior_users, :id, :name, {prompt: ""}) %>
               <%= f.hidden_field :affiliation_manager_approval_application_status, :value => "申請中"  %>
