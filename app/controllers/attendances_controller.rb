@@ -252,7 +252,8 @@ class AttendancesController < ApplicationController
 
   def update_affiliation_manager_approval_application #所属長承認申請
     @user = User.find(params[:id])
-    @attendance = @user.attendances.find_by(params[:date])
+    @attendance = Attendance.find_by(worked_on: params[:attendance][:worked_on], user_id: params[:id])
+    # @attendance = @user.attendances.find_by(worked_on: params[:worked_on])
     # @attendance = Attendance.find_by(worked_on: params[:attendance][:date], user_id: params[:id])
   # debugger
     if params[:affiliation_manager_approval_application_target_superior_id] == ""
@@ -260,14 +261,50 @@ class AttendancesController < ApplicationController
       redirect_to user_url
     else
       @attendance.update_attributes(affiliation_manager_approval_application_params)
+      # params[:attendance].update_attributes(affiliation_manager_approval_application_params)
+      # affiliation_manager_approval_application_params.each do |id, item|
+        # attendance = Attendance.find(id)
+        # @attendance.update_attributes(item)
+      # end
       flash[:success] = "#{params[:date].to_date.month}月分の所属長承認申請を行いました。"
-      redirect_to user_url
+      redirect_to user_url(date: params[:date])
     end
   end
 
   def edit_affiliation_manager_approval_application_notification #所属長承認申請のお知らせ
+    @user = User.find(params[:id])
     @attendances = Attendance.where(affiliation_manager_approval_application_target_superior_id: params[:id], affiliation_manager_approval_application_status: "申請中")
     @users = User.joins(:attendances).group("users.id").where(attendances:{affiliation_manager_approval_application_status: "申請中"}).where.not(attendances:{user_id: params[:id]})
+  end
+
+  def update_affiliation_manager_approval_application_notification #所属長承認申請のお知らせ
+    n1 = 0
+    n2 = 0
+    n3 = 0
+    ActiveRecord::Base.transaction do
+      affiliation_manager_approval_application_params.each do |id, item|
+        if item[:change_for_affiliation_manager_approval_application] == "true"
+          attendance = Attendance.find(id)
+            if item[:affiliation_manager_approval_application_status] == "承認"
+              n1 = n1 + 1
+            elsif item[:affiliation_manager_approval_application_status] == "否認"
+              n2 = n2 + 1
+              attendance.affiliation_manager_approval_application_target_superior_id = nil
+            elsif item[:affiliation_manager_approval_application_status] == "なし" 
+              n3 = n3 + 1
+              attendance.affiliation_manager_approval_application_target_superior_id = nil
+              item[:affiliation_manager_approval_application_status] = ""
+              item[:change_for_affiliation_manager_approval_application] = "false"
+            end
+          attendance.update_attributes!(item)
+        end
+      end
+    end
+    flash[:success] = "所属長承認申請を#{n1}件承認、#{n2}件否認、#{n3}件取り消しました。"
+    redirect_to user_url
+  rescue ActiveRecord::RecordInvalid
+    flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
+    redirect_to user_url(date: params[:date])
   end
 
   def attendance_change_application_confirmation_show #勤怠変更申請の確認リンク
@@ -280,6 +317,15 @@ class AttendancesController < ApplicationController
   end
 
   def overtime_application_confirmation_show #残業の確認リンク
+    @user = User.find(params[:id])
+    @attendance = Attendance.find(params[:id])
+    @first_day = params[:date].to_date.beginning_of_month
+    @last_day = @first_day.end_of_month
+    @attendances = @user.attendances.where(worked_on: @first_day..@last_day)
+    @worked_sum = @attendances.where.not(started_at: nil).count
+  end
+  
+  def affiliation_manager_approval_application_confirmation_show #所属長承認申請の確認リンク
     @user = User.find(params[:id])
     @attendance = Attendance.find(params[:id])
     @first_day = params[:date].to_date.beginning_of_month
@@ -346,7 +392,7 @@ class AttendancesController < ApplicationController
     
     #所属長承認申請
     def affiliation_manager_approval_application_params
-      params.require(:attendance).permit(:affiliation_manager_approval_application_target_superior_id, :affiliation_manager_approval_application_status)
+      params.require(:attendance).permit(:affiliation_manager_approval_application_target_superior_id, :affiliation_manager_approval_application_status, :change_for_affiliation_manager_approval_application)
     end
 
   def admin_or_correct_user

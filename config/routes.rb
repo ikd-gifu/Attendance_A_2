@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       patch 'attendances/update_affiliation_manager_approval_application'
       get 'attendances/edit_affiliation_manager_approval_application_notification'
       patch 'attendances/update_affiliation_manager_approval_application_notification'
+      get 'attendances/affiliation_manager_approval_application_confirmation_show'
     end
     resources :attendances, only: :update
   end

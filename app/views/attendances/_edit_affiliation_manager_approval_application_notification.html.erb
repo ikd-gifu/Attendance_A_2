@@ -1,0 +1,54 @@
+<% provide(:class_text, 'overtime notification') %>
+<% provide(:button_text, '変更を送信する') %>
+
+<div class="modal-dialog modal-lg modal-dialog-center">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <!--<h1 class="modal-title">【#{}からの残業申請】</h1>-->
+    </div>
+    <div class="modal-body">
+      
+      <%= form_with(model: @user, url:attendances_update_affiliation_manager_approval_application_notification_user_path(@user), local: true, method: :patch) do |f| %>
+        <!--< %= render 'shared/error_messages', object: @user %>-->
+        <!--< %= f.hidden_field :date, :value => @attendance.worked_on %>-->
+        
+        <% @users.each do |user| %>
+        
+          <table class="table table-bordered table-striped table-hover">
+  
+            <h2 class="modal-title">【<%= "#{user.name}" %>からの所属長承認申請】</h2>
+              <thead>
+                <tr>
+                  <th>月</th>
+                  <th>指示者確認㊞</th>
+                  <th>変更</th>
+                  <th>勤怠を確認する</th>
+                </tr>
+              </thead>
+            
+            <% @affiliation_attendances = @attendances.where(user_id: user.id) %>
+            <% @affiliation_attendances.each do |day| %>
+              <%= f.fields_for "affiliation_attendances[]", day do |affiliation_attendance| %>
+                <tbody>
+                  <tr>
+                    <th><%= day.worked_on.month %>月</th>
+                    <th><%= affiliation_attendance.select :affiliation_manager_approval_application_status, [["承認", "承認"],["申請中", "申請中"],["否認", "否認"],["なし", "なし"]], :selected=>"申請中" %></th>
+                    <th><%= affiliation_attendance.check_box :change_for_affiliation_manager_approval_application, {}, "true", "false" %></th>
+                    <th><%= link_to "確認", attendances_affiliation_manager_approval_application_confirmation_show_user_path(user.id, date: day.worked_on), class: "btn btn-primary" %></th>
+                  </tr>
+                </tbody>
+              <% end %>
+            <% end %>
+            
+          </table>
+        <% end %>
+        
+        <%# テーブルの中に入れるとボタンが動作しなくなる・テーブルをテーブルの中に入れ子にしない %>
+        <%= f.submit yield(:button_text), class: "btn btn-block btn-primary btn-#{yield(:class_text)}" %>
+      <% end %>
+    </div>
+  </div>
+</div>
