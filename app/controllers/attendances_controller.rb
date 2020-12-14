@@ -252,22 +252,30 @@ class AttendancesController < ApplicationController
 
   def update_affiliation_manager_approval_application #所属長承認申請
     @user = User.find(params[:id])
-    @attendance = Attendance.find_by(worked_on: params[:attendance][:worked_on], user_id: params[:id])
-    # @attendance = @user.attendances.find_by(worked_on: params[:worked_on])
-    # @attendance = Attendance.find_by(worked_on: params[:attendance][:date], user_id: params[:id])
-  # debugger
-    if params[:affiliation_manager_approval_application_target_superior_id] == ""
-      flash[:danger] = "申請先上長を選択してください。"
-      redirect_to user_url
-    else
-      @attendance.update_attributes(affiliation_manager_approval_application_params)
-      # params[:attendance].update_attributes(affiliation_manager_approval_application_params)
-      # affiliation_manager_approval_application_params.each do |id, item|
-        # attendance = Attendance.find(id)
-        # @attendance.update_attributes(item)
-      # end
-      flash[:success] = "#{params[:date].to_date.month}月分の所属長承認申請を行いました。"
-      redirect_to user_url(date: params[:date])
+    
+    if params[:attendance].present? #ログイン後矢印で遷移後現在の月表示時
+      @attendance = Attendance.find_by(worked_on: params[:attendance][:worked_on], user_id: params[:id])
+      
+      if params[:attendance][:affiliation_manager_approval_application_target_superior_id] == ""
+        flash[:danger] = "申請先上長を選択してください。"
+        redirect_to user_url
+      else
+        @attendance.update_attributes(after_transition_affiliation_manager_approval_application_params)
+        flash[:success] = "#{params[:date].to_date.month}月分の所属長承認申請を行いました。"
+        redirect_to user_url(date: params[:date])
+      end
+      
+    else #ログイン後現在の月表示時
+      @attendance = Attendance.find_by(worked_on: params[:worked_on], user_id: params[:id])
+      
+      if params[:affiliation_manager_approval_application_target_superior_id] == ""
+        flash[:danger] = "申請先上長を選択してください。"
+        redirect_to user_url
+      else
+        @attendance.update_attributes(affiliation_manager_approval_application_params)
+        flash[:success] = "#{params[:date].to_date.month}月分の所属長承認申請を行いました。"
+        redirect_to user_url(date: params[:date]) and return
+      end
     end
   end
 
@@ -282,7 +290,7 @@ class AttendancesController < ApplicationController
     n2 = 0
     n3 = 0
     ActiveRecord::Base.transaction do
-      affiliation_manager_approval_application_notification_params.each do |id, item|
+      after_transition_affiliation_manager_approval_application_params.each do |id, item|
         if item[:change_for_affiliation_manager_approval_application] == "true"
           attendance = Attendance.find(id)
             if item[:affiliation_manager_approval_application_status] == "承認"
@@ -390,9 +398,14 @@ class AttendancesController < ApplicationController
       params.require(:user).permit(applicant_attendances: [:change, :overtime_application_status])[:applicant_attendances]
     end
     
+    #所属長承認申請　矢印で遷移後
+    def after_transition_affiliation_manager_approval_application_params
+      params.require(:attendance).permit(:affiliation_manager_approval_application_target_superior_id, :affiliation_manager_approval_application_status, :change_for_affiliation_manager_approval_application)
+    end
+    
     #所属長承認申請
     def affiliation_manager_approval_application_params
-      params.require(:attendance).permit(:affiliation_manager_approval_application_target_superior_id, :affiliation_manager_approval_application_status, :change_for_affiliation_manager_approval_application)
+      params.permit(:affiliation_manager_approval_application_target_superior_id, :affiliation_manager_approval_application_status, :change_for_affiliation_manager_approval_application)
     end
     
     #所属長承認申請のお知らせ
