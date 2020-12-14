@@ -282,7 +282,7 @@ class AttendancesController < ApplicationController
     n2 = 0
     n3 = 0
     ActiveRecord::Base.transaction do
-      affiliation_manager_approval_application_params.each do |id, item|
+      affiliation_manager_approval_application_notification_params.each do |id, item|
         if item[:change_for_affiliation_manager_approval_application] == "true"
           attendance = Attendance.find(id)
             if item[:affiliation_manager_approval_application_status] == "承認"
@@ -393,6 +393,11 @@ class AttendancesController < ApplicationController
     #所属長承認申請
     def affiliation_manager_approval_application_params
       params.require(:attendance).permit(:affiliation_manager_approval_application_target_superior_id, :affiliation_manager_approval_application_status, :change_for_affiliation_manager_approval_application)
+    end
+    
+    #所属長承認申請のお知らせ
+    def affiliation_manager_approval_application_notification_params
+      params.require(:user).permit(affiliation_attendances: [:affiliation_manager_approval_application_target_superior_id, :affiliation_manager_approval_application_status, :change_for_affiliation_manager_approval_application])[:affiliation_attendances]
     end
 
   def admin_or_correct_user
