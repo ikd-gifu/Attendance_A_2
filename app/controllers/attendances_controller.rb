@@ -290,7 +290,7 @@ class AttendancesController < ApplicationController
     n2 = 0
     n3 = 0
     ActiveRecord::Base.transaction do
-      after_transition_affiliation_manager_approval_application_params.each do |id, item|
+      affiliation_manager_approval_application_notification_params.each do |id, item|
         if item[:change_for_affiliation_manager_approval_application] == "true"
           attendance = Attendance.find(id)
             if item[:affiliation_manager_approval_application_status] == "承認"
