@@ -195,6 +195,16 @@
               <%= User.find_by(id: Attendance.find_by(worked_on: @first_day, user_id: params[:id], affiliation_manager_approval_application_status: "申請中").affiliation_manager_approval_application_target_superior_id).name %>
               に所属長承認申請中
             </p>
+          <% elsif Attendance.find_by(worked_on: @first_day, user_id: params[:id], affiliation_manager_approval_application_status: "承認").present? %>
+            <p>
+              所属長承認　<%= User.find_by(id: Attendance.find_by(worked_on: @first_day, user_id: params[:id], affiliation_manager_approval_application_status: "承認").affiliation_manager_approval_application_target_superior_id).name %>
+              から承認済
+            </p>
+          <% elsif Attendance.find_by(worked_on: @first_day, user_id: params[:id], affiliation_manager_approval_application_status: "否認").present? %>
+            <p>
+              所属長承認　<%= User.find_by(id: Attendance.find_by(worked_on: @first_day, user_id: params[:id], affiliation_manager_approval_application_status: "否認").affiliation_manager_approval_application_target_superior_id).name %>
+              から否認
+            </p>
           <% else %>
             <p>所属長承認　未</p>
           <% end %>

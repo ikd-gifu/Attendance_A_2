@@ -297,7 +297,7 @@ class AttendancesController < ApplicationController
               n1 = n1 + 1
             elsif item[:affiliation_manager_approval_application_status] == "否認"
               n2 = n2 + 1
-              attendance.affiliation_manager_approval_application_target_superior_id = nil
+              # attendance.affiliation_manager_approval_application_target_superior_id = nil
             elsif item[:affiliation_manager_approval_application_status] == "なし" 
               n3 = n3 + 1
               attendance.affiliation_manager_approval_application_target_superior_id = nil
