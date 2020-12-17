@@ -26,52 +26,52 @@
   </table>
 </div>
 
-<ul class = "infomation">
-  <% if current_user.superior? %>
-    <li>
-      <% if @affiliation_manager_approval_application_count >= 1 %>
-        <p class = "notification">
-        【所属長承認申請のお知らせ】
-        <%= link_to "#{@affiliation_manager_approval_application_count}件の通知があります",
-        attendances_edit_affiliation_manager_approval_application_notification_user_path, remote: true, class: "box1" 
-        %>
-        </p>
-      <% else %>
-        <p>【所属長承認申請のお知らせ】</p>
-      <% end %>
-    </li>
-    <li>
-      <% if @attendance_change_application_count >= 1 %>
-        <p class = "notification">
-          【勤怠変更申請のお知らせ】
-          <%= link_to "#{@attendance_change_application_count}件の通知があります",
-          attendances_edit_attendance_change_application_notification_user_path, remote: true, class: "box1" 
-          %>
-        </p>
-      <% else %>
-        <p>【勤怠変更申請のお知らせ】</p>
-      <% end %>
-    </li>
-    <li>
-      <% if @overtime_application_count >= 1 %>
-        <p class = "notification">
-          【残業申請のお知らせ】
-          <%= link_to "#{@overtime_application_count}件の通知があります",
-          attendances_edit_overtime_application_notification_user_path, remote: true, class: "box1" 
-          %>
-        </p>
-      <% else %>
-        <p>【残業申請のお知らせ】</p>
-      <% end %>
-    </li>
-  <% end %>
-</ul>
+<!--<ul class = "infomation">-->
+<!--  < % if current_user.superior? %>-->
+<!--    <li>-->
+<!--      < % if @affiliation_manager_approval_application_count >= 1 %>-->
+<!--        <p class = "notification">-->
+<!--        【所属長承認申請のお知らせ】-->
+<!--        < %= link_to "#{@affiliation_manager_approval_application_count}件の通知があります",-->
+<!--        attendances_edit_affiliation_manager_approval_application_notification_user_path, remote: true, class: "box1" -->
+<!--        %>-->
+<!--        </p>-->
+<!--      < % else %>-->
+<!--        <p>【所属長承認申請のお知らせ】</p>-->
+<!--      < % end %>-->
+<!--    </li>-->
+<!--    <li>-->
+<!--      < % if @attendance_change_application_count >= 1 %>-->
+<!--        <p class = "notification">-->
+<!--          【勤怠変更申請のお知らせ】-->
+<!--          < %= link_to "#{@attendance_change_application_count}件の通知があります",-->
+<!--          attendances_edit_attendance_change_application_notification_user_path, remote: true, class: "box1" -->
+<!--          %>-->
+<!--        </p>-->
+<!--      < % else %>-->
+<!--        <p>【勤怠変更申請のお知らせ】</p>-->
+<!--      < % end %>-->
+<!--    </li>-->
+<!--    <li>-->
+<!--      < % if @overtime_application_count >= 1 %>-->
+<!--        <p class = "notification">-->
+<!--          【残業申請のお知らせ】-->
+<!--          < %= link_to "#{@overtime_application_count}件の通知があります",-->
+<!--          attendances_edit_overtime_application_notification_user_path, remote: true, class: "box1" -->
+<!--          %>-->
+<!--        </p>-->
+<!--      < % else %>-->
+<!--        <p>【残業申請のお知らせ】</p>-->
+<!--      < % end %>-->
+<!--    </li>-->
+<!--  < % end %>-->
+<!--</ul>-->
 
-<div class="btn-users-show">
-  <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %>
-  <%= link_to "CSV出力", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %><br>
-  <%= link_to "勤怠修正ログ（承認済）", attendances_attendance_modifying_log_user_path(date: @first_day), class: "btn btn-primary" %>
-</div>
+<!--<div class="btn-users-show">-->
+<!--  < %= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %>-->
+<!--  < %= link_to "CSV出力", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %><br>-->
+<!--  < %= link_to "勤怠修正ログ（承認済）", attendances_attendance_modifying_log_user_path(date: @first_day), class: "btn btn-primary" %>-->
+<!--</div>-->
 
 <div>
   <table class="table table-bordered table-condensed table-striped table-hover" id="table-attendances">
@@ -109,10 +109,10 @@
       <% @attendances.each do |day| %>
         <tr>
           <td>
-            <%= link_to "残業申請",
-            attendances_edit_one_day_overtime_application_user_path(@user, date: day.worked_on),
-            remote: true, class: "btn btn-primary" 
-            %>
+            <!--< %= link_to "残業申請",-->
+            <!--attendances_edit_one_day_overtime_application_user_path(@user, date: day.worked_on),-->
+            <!--remote: true, class: "btn btn-primary" -->
+            <!--%>-->
           </td>
           <% css_class =
             case %w{日 月 火 水 木 金 土}[day.worked_on.wday]
@@ -127,16 +127,16 @@
           <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
           <td><%= l(day.started_at, format: :minute) if day.started_at.present? %></td>
           <td>
-            <% if btn_text = attendance_state(day) && !day.started_at.present? %>
-              <%= link_to "出社", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
-            <% end %>
+            <!--< % if btn_text = attendance_state(day) && !day.started_at.present? %>-->
+            <!--  < %= link_to "出社", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>-->
+            <!--< % end %>-->
           </td>
           <td><%= l(day.finished_at, format: :hour) if day.finished_at.present? %></td>
           <td><%= l(day.finished_at, format: :minute) if day.finished_at.present? %></td>
           <td>
-            <% if btn_text = attendance_state(day) && day.started_at.present? %>
-              <%= link_to "退社", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
-            <% end %>
+            <!--< % if btn_text = attendance_state(day) && day.started_at.present? %>-->
+            <!--  < %= link_to "退社", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>-->
+            <!--< % end %>-->
           </td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
@@ -154,29 +154,29 @@
           </td>
           <td><%= day.business_process_content %></td>
           <td>
-            <% if day.overtime_application_status.present? %>
-              <% if day.overtime_application_status == "申請中" %>
-                <%= "#{User.find(day.overtime_application_target_superior_id).name}に残業#{day.overtime_application_status}" %>
-              <% elsif day.overtime_application_status == "承認" %>
-                <%= "残業#{day.overtime_application_status}済" %>
-              <% else day.overtime_application_status == "否認" %>
-                <%= "残業#{day.overtime_application_status}" %>
-              <% end %>
-            <% end %>
+            <!--< % if day.overtime_application_status.present? %>-->
+            <!--  < % if day.overtime_application_status == "申請中" %>-->
+            <!--    < %= "#{User.find(day.overtime_application_target_superior_id).name}に残業#{day.overtime_application_status}" %>-->
+            <!--  < % elsif day.overtime_application_status == "承認" %>-->
+            <!--     < %= "残業#{day.overtime_application_status}済" %>-->
+            <!--  < % else day.overtime_application_status == "否認" %>-->
+            <!--    < %= "残業#{day.overtime_application_status}" %>-->
+            <!--  < % end %>-->
+            <!--< % end %>-->
             
-            <% if day.overtime_application_status.present? %>
-              <br>
-            <% end %>
+            <!--< % if day.overtime_application_status.present? && day.attendance_change_application_status.present? %>-->
+            <!--  <br>-->
+            <!--< % end %>-->
             
-            <% if day.attendance_change_application_status.present? %>
-              <% if day.attendance_change_application_status == "申請中" %>
-                <%= "#{User.find(day.attendance_change_application_target_superior_id).name}に勤怠変更#{day.attendance_change_application_status}" %>
-              <% elsif day.attendance_change_application_status == "承認" %>
-                <%= "勤怠変更#{day.attendance_change_application_status}済" %>
-              <% else day.attendance_change_application_status == "否認" %>
-                <%= "勤怠変更#{day.attendance_change_application_status}" %>
-              <% end %>
-            <% end %>
+            <!--< % if day.attendance_change_application_status.present? %>-->
+            <!--  < % if day.attendance_change_application_status == "申請中" %>-->
+            <!--    < %= "#{User.find(day.attendance_change_application_target_superior_id).name}に勤怠変更#{day.attendance_change_application_status}" %>-->
+            <!--  < % elsif day.attendance_change_application_status == "承認" %>-->
+            <!--    < %= "勤怠変更#{day.attendance_change_application_status}済" %>-->
+            <!--  < % else day.attendance_change_application_status == "否認" %>-->
+            <!--    < %= "勤怠変更#{day.attendance_change_application_status}" %>-->
+            <!--  < % end %>-->
+            <!--< % end %>-->
           </td>
         </tr>
       <% end %>
@@ -192,8 +192,8 @@
         <td rowspan="2">
           <% if Attendance.find_by(worked_on: @first_day, user_id: params[:id], affiliation_manager_approval_application_status: "申請中").present? %>
             <p>
-              <%= User.find_by(id: Attendance.find_by(worked_on: @first_day, user_id: params[:id], affiliation_manager_approval_application_status: "申請中").affiliation_manager_approval_application_target_superior_id).name %>
-              に所属長承認申請中
+              所属長承認　<%= User.find_by(id: Attendance.find_by(worked_on: @first_day, user_id: params[:id], affiliation_manager_approval_application_status: "申請中").affiliation_manager_approval_application_target_superior_id).name %>
+              に申請中
             </p>
           <% elsif Attendance.find_by(worked_on: @first_day, user_id: params[:id], affiliation_manager_approval_application_status: "承認").present? %>
             <p>
@@ -208,14 +208,14 @@
           <% else %>
             <p>所属長承認　未</p>
           <% end %>
-            <%= form_with(model: @approval_attendance, url: attendances_update_affiliation_manager_approval_application_user_path(date: @first_day), local: true, method: :patch) do |f| %>
-              <%= f.collection_select(:affiliation_manager_approval_application_target_superior_id, @selected_superior_users, :id, :name, {prompt: ""}) %>
-              <%= f.hidden_field :affiliation_manager_approval_application_status, :value => "申請中"  %>
-              <%= f.hidden_field :worked_on, :value => @first_day  %>
-              <div class="center">
-                <%= f.submit "申請", class: "btn btn-primary" %>
-              </div>
-            <% end %>
+            <!--< %= form_with(model: @approval_attendance, url: attendances_update_affiliation_manager_approval_application_user_path(date: @first_day), local: true, method: :patch) do |f| %>-->
+            <!--  < %= f.collection_select(:affiliation_manager_approval_application_target_superior_id, @selected_superior_users, :id, :name, {prompt: ""}) %>-->
+            <!--  < %= f.hidden_field :affiliation_manager_approval_application_status, :value => "申請中"  %>-->
+            <!--  < %= f.hidden_field :worked_on, :value => @first_day  %>-->
+            <!--  <div class="center">-->
+            <!--    < %= f.submit "申請", class: "btn btn-primary" %>-->
+            <!--  </div>-->
+            <!--< % end %>-->
         </td>
       </tr>
       <tr>
@@ -230,10 +230,10 @@
 
 <!--モーダルウインドウ表示-->
 <!--1日分の残業申請-->
-<div id="edit_one_day_overtime_application" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<!--<div id="edit_one_day_overtime_application" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>-->
 <!--残業申請のおしらせ-->
-<div id="edit_overtime_application_notification" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<!--<div id="edit_overtime_application_notification" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>-->
 <!--勤怠変更申請のおしらせ-->
-<div id="edit_attendance_change_application_notification" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<!--<div id="edit_attendance_change_application_notification" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>-->
 <!--所属長承認申請のおしらせ-->
-<div id="edit_affiliation_manager_approval_application_notification" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<!--<div id="edit_affiliation_manager_approval_application_notification" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>-->
