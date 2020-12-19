@@ -1,5 +1,5 @@
 class AttendancesController < ApplicationController
-  protect_from_forgery with: :null_session
+  # protect_from_forgery with: :null_session
   
   before_action :set_user, only: [:edit_one_month, :update_one_month, :edit_one_day_overtime_application, :update_one_day_overtime_application,
                                   :edit_overtime_application_notification, :update_overtime_application_notification,
