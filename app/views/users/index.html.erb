@@ -15,10 +15,10 @@
 <!--  < % end %>-->
 <!--</div>-->
 
-<div class="csv_holder">
+<div>
   <%= form_tag import_users_path, method: :post, multipart: true do %>
     <%= file_field_tag :file %>
-    <%= submit_tag "インポート" %>
+    <%= submit_tag "インポート", class: "btn btn-primary" %>
   <% end %>
 </div>
 
