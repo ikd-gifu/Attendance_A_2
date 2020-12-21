@@ -2,18 +2,49 @@
 <% provide(:button_text, '編集する') %>
 <h1>ユーザー一覧</h1>
 
+<!--<div class="csv_holder">-->
+<!--  < %= form_tag import_users_path, method: :post, multipart: true do |f| %>-->
+<!--    <div class="search_item">-->
+<!--      < %= submit_tag 'ファイル選択', class: %i(csv_input_btn), type: 'button', oncpck: "$('#file_input').cpck();" %>-->
+<!--      < %= text_field_tag 'filename',"", id: "filename", disabled: true %>-->
+<!--      < %= file_field_tag :file, id: "file_input", style: "display: none;", onchange: "file_selected($(this));" %>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--      < %= submit_tag "CSVインポート", class: "btn btn-primary" %>-->
+<!--    </div>-->
+<!--  < % end %>-->
+<!--</div>-->
+
 <div class="csv_holder">
-  <%= form_tag import_users_path, method: :post, multipart: true do |f| %>
-    <div class="search_item">
-      <%= submit_tag 'ファイル選択', class: %i(csv_input_btn), type: 'button', oncpck: "$('#file_input').cpck();" %>
-      <%= text_field_tag 'filename',"", id: "filename", disabled: true %>
-      <%= file_field_tag :file, id: "file_input", style: "display: none;", onchange: "file_selected($(this));" %>
-    </div>
-    <div>
-      <%= submit_tag "CSVインポート", class: "btn btn-primary" %>
-    </div>
+  <%= form_tag import_users_path, method: :post, multipart: true do %>
+    <%= file_field_tag :file %>
+    <%= submit_tag "インポート" %>
   <% end %>
 </div>
+
+<!--< % if flash[:notice] %>-->
+<!--  <div class="alert alert-info" role="alert"><%= flash[:notice] %></div>-->
+<!--< % end %>-->
+
+<!--<div>-->
+<!--  < %= form_tag import_users_path, method: :post, multipart: true do |f| %>-->
+<!--    <div class="search_item">-->
+<!--      < %= text_field_tag 'filename',"", id: "filename", disabled: true %>-->
+<!--      < %= file_field_tag 'emails_file', id: "file_input", style: "display: none;", onchange: "file_selected($(this));" %>-->
+<!--      < %= button_tag 'ファイル選択', class: %i(btn-primary csv_input_btn), type: 'button', onclick: "$('#file_input').click();" %>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--      <button type="submit" class="btn btn-primary">CSVインポート</button>-->
+<!--    </div>-->
+<!--  < % end %>-->
+<!--</div>-->
+
+<!--<script type="text/javascript">-->
+<!--  function file_selected(file_field){-->
+<!--    var filename = $(file_field)[0].files[0].name;-->
+<!--    $("#filename").val(filename);-->
+<!--  }-->
+<!--</script>-->
 
   <!-- CSVインポートフォーム -->
   <!--  <div class="col-md-4 col-md-offset-1 csv-group">-->
