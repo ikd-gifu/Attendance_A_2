@@ -5,6 +5,8 @@ class UsersController < ApplicationController
   before_action :admin_user, only: [:destroy, :index, :users_at_work, :edit_basic_info, :update_basic_info]
   before_action :set_one_month, only: :show
 
+  require 'csv'
+
   def index
     @users = User.paginate(page: params[:page])
   end
@@ -31,6 +33,14 @@ class UsersController < ApplicationController
       redirect_to root_url
     else
       @worked_sum = @attendances.where.not(started_at: nil).count
+      
+      respond_to do |format|
+        format.html
+        format.csv do |csv|
+          send_posts_csv(@attendances)
+        end
+      end
+      
       if current_user.superior?
         @target_superior_user_attendances = Attendance.all.where(overtime_application_target_superior_id: params[:id])
         @overtime_application_count = @target_superior_user_attendances.where(overtime_application_status: "申請中").count
@@ -109,4 +119,21 @@ class UsersController < ApplicationController
       params.require(:user).permit(:affiliation, :employee_number, :uid, :basic_work_time,
                                     :designated_work_start_time, :designated_work_end_time)
     end
+    
+    def send_posts_csv(attendances)
+      csv_data = CSV.generate do |csv|
+        column_names = %w(日付　出社時間　退社時間)
+        csv << column_names
+        attendances.each do |day|
+          column_values = [
+            day.worked_on,
+            day.started_at,
+            day.finished_at,
+          ]
+          csv << column_values
+        end
+      end
+      send_data(csv_data, filename: "承認済み勤怠情報.csv")
+    end
+    
 end
