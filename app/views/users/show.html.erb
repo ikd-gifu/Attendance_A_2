@@ -70,7 +70,7 @@
 <div class="btn-users-show">
   <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %>
   <!--< %= link_to "CSV出力", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %><br>-->
-  <%= link_to "CSV出力", users_path(format: :csv), class: "btn btn-primary" %><br>
+  <%= link_to "CSV出力", csv_output_user_path(date: @first_day, format: :csv), class: "btn btn-primary" %><br>
   <%= link_to "勤怠修正ログ（承認済）", attendances_attendance_modifying_log_user_path(date: @first_day), class: "btn btn-primary" %>
 </div>
 

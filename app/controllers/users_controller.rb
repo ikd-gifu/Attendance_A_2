@@ -1,9 +1,9 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :csv_output]
   before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
   before_action :correct_user, only: [:edit, :update]
   before_action :admin_user, only: [:destroy, :index, :users_at_work, :edit_basic_info, :update_basic_info]
-  before_action :set_one_month, only: :show
+  before_action :set_one_month, only: [:show, :csv_output]
 
   require 'csv'
 
@@ -27,6 +27,38 @@ class UsersController < ApplicationController
     end
   end
   
+  #csv出力
+  def csv_output
+    # @attendances = @user.attendances.where()
+    @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
+    
+    respond_to do |format|
+      format.html
+      format.csv do |csv|
+        send_users_csv(@attendances)
+      end
+    end
+  end
+  
+  def send_users_csv(attendances)
+    csv_data = CSV.generate do |csv|
+      header = ["日付", "出社時間", "退社時間"]
+      csv << header
+      @attendances.each do |attendance|
+        values = [
+          # l(attendance.worked_on, format: :short),
+          # l(attendance.started_at, format: :short),
+          # l(attendance.finished_at, format: :short)
+          attendance.worked_on,
+          attendance.started_at,
+          attendance.finished_at
+        ]
+        csv << values
+      end
+    end
+    send_data(csv_data, filename: "承認済み勤怠情報.csv")
+  end
+  
   def show
     if current_user.admin?
       flash[:danger] = '権限がありません'
@@ -34,12 +66,12 @@ class UsersController < ApplicationController
     else
       @worked_sum = @attendances.where.not(started_at: nil).count
       
-      respond_to do |format|
-        format.html
-        format.csv do |csv|
-          send_posts_csv(@attendances)
-        end
-      end
+      # respond_to do |format|
+      #   format.html
+      #   format.csv do |csv|
+      #     send_posts_csv(@attendances)
+      #   end
+      # end
       
       if current_user.superior?
         @target_superior_user_attendances = Attendance.all.where(overtime_application_target_superior_id: params[:id])
@@ -120,20 +152,20 @@ class UsersController < ApplicationController
                                     :designated_work_start_time, :designated_work_end_time)
     end
     
-    def send_posts_csv(attendances)
-      csv_data = CSV.generate do |csv|
-        column_names = %w(日付　出社時間　退社時間)
-        csv << column_names
-        attendances.each do |day|
-          column_values = [
-            day.worked_on,
-            day.started_at,
-            day.finished_at,
-          ]
-          csv << column_values
-        end
-      end
-      send_data(csv_data, filename: "承認済み勤怠情報.csv")
-    end
-    
+    # def send_posts_csv(attendances)
+    #   csv_data = CSV.generate do |csv|
+    #     column_names = %w(日付　出社時間　退社時間)
+    #     csv << column_names
+    #     attendances.each do |day|
+    #       column_values = [
+    #         day.worked_on,
+    #         day.started_at,
+    #         day.finished_at,
+    #       ]
+    #       csv << column_values
+    #     end
+    #   end
+    #   send_data(csv_data, filename: "承認済み勤怠情報.csv")
+    # end
+
 end
