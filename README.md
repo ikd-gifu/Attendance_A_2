@@ -8,4 +8,5 @@
 * Ruby
 * Rails
 * Git
-* Git(HTTPSからSSH通信へ変更)
+* Git(HTTPSからSSH通信へ変更)# Attendance_A_2
+# Attendance_A
