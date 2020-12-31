@@ -41,22 +41,35 @@ class UsersController < ApplicationController
   end
   
   def send_users_csv(attendances)
-    csv_data = CSV.generate do |csv|
+    bom = %w(EF BB BF).map { |e| e.hex.chr }.join # bomを作成
+    
+    csv_data = CSV.generate(bom) do |csv|# generateで引数にbomを渡してあげる
       header = ["日付", "出社時間", "退社時間"]
       csv << header
       @attendances.each do |attendance|
-        values = [
-          # l(attendance.worked_on, format: :short),
-          # l(attendance.started_at, format: :short),
-          # l(attendance.finished_at, format: :short)
-          attendance.worked_on,
-          attendance.started_at,
-          attendance.finished_at
-        ]
+        if attendance.started_at.present? && attendance.finished_at.present?
+          values = [
+            l(attendance.worked_on, format: :short),
+            l(attendance.started_at, format: :time),
+            l(attendance.finished_at, format: :time)
+          ]
+        elsif attendance.started_at.present? && attendance.finished_at.blank?
+          values = [
+            l(attendance.worked_on, format: :short),
+            l(attendance.started_at, format: :time),
+            attendance.finished_at
+          ]
+        else
+          values = [
+            l(attendance.worked_on, format: :short),
+            attendance.started_at,
+            attendance.finished_at
+          ]
+        end
         csv << values
       end
     end
-    send_data(csv_data, filename: "承認済み勤怠情報.csv")
+    send_data(csv_data, filename: "#{@user.name}の#{@first_day.month}月の承認済み勤怠情報.csv")
   end
   
   def show
