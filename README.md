@@ -10,3 +10,5 @@
 * Git
 * Git(HTTPSからSSH通信へ変更)# Attendance_A_2
 # Attendance_A
+
+20201231 https => ssh
