@@ -15,6 +15,7 @@ gem 'jquery-rails'
 gem 'turbolinks',   '~> 5'
 gem 'jbuilder',     '~> 2.5'
 gem 'roo' #csvを読み込むためのgem
+gem 'rounding' #単位時間あたりで切り捨てる
 
 group :development, :test do
   gem 'sqlite3', '1.3.13'

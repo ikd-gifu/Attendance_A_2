@@ -31,10 +31,10 @@
     <li>
       <% if @affiliation_manager_approval_application_count >= 1 %>
         <p class = "notification">
-        【所属長承認申請のお知らせ】
-        <%= link_to "#{@affiliation_manager_approval_application_count}件の通知があります",
-        attendances_edit_affiliation_manager_approval_application_notification_user_path, remote: true, class: "box1" 
+        <%= link_to "【所属長承認申請のお知らせ】",
+        attendances_edit_affiliation_manager_approval_application_notification_user_path, remote: true
         %>
+        <a class = "box1"><%= @affiliation_manager_approval_application_count %>件の通知があります</a>
         </p>
       <% else %>
         <p>【所属長承認申請のお知らせ】</p>
@@ -43,10 +43,10 @@
     <li>
       <% if @attendance_change_application_count >= 1 %>
         <p class = "notification">
-          【勤怠変更申請のお知らせ】
-          <%= link_to "#{@attendance_change_application_count}件の通知があります",
-          attendances_edit_attendance_change_application_notification_user_path, remote: true, class: "box1" 
+          <%= link_to "【勤怠変更申請のお知らせ】",
+          attendances_edit_attendance_change_application_notification_user_path, remote: true
           %>
+          <a class = "box1"><%= @attendance_change_application_count %>件の通知があります</a>
         </p>
       <% else %>
         <p>【勤怠変更申請のお知らせ】</p>
@@ -55,10 +55,10 @@
     <li>
       <% if @overtime_application_count >= 1 %>
         <p class = "notification">
-          【残業申請のお知らせ】
-          <%= link_to "#{@overtime_application_count}件の通知があります",
-          attendances_edit_overtime_application_notification_user_path, remote: true, class: "box1" 
+          <%= link_to "【残業申請のお知らせ】",
+          attendances_edit_overtime_application_notification_user_path, remote: true
           %>
+          <a class = "box1"><%= @overtime_application_count %>件の通知があります</a>
         </p>
       <% else %>
         <p>【残業申請のお知らせ】</p>
@@ -125,15 +125,15 @@
           %>
           <td><%= l(day.worked_on, format: :short) %></td>
           <td class="<%= css_class %>"><%= %w{日 月 火 水 木 金 土}[day.worked_on.wday] %></td>
-          <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
-          <td><%= l(day.started_at, format: :minute) if day.started_at.present? %></td>
+          <td><%= format_hour(day.started_at) if day.started_at.present? %></td>
+          <td><%= format_min(day.started_at) if day.started_at.present? %></td>
           <td>
             <% if btn_text = attendance_state(day) && !day.started_at.present? %>
               <%= link_to "出社", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
             <% end %>
           </td>
-          <td><%= l(day.finished_at, format: :hour) if day.finished_at.present? %></td>
-          <td><%= l(day.finished_at, format: :minute) if day.finished_at.present? %></td>
+          <td><%= format_hour(day.finished_at) if day.finished_at.present? %></td>
+          <td><%= format_min(day.finished_at) if day.finished_at.present? %></td>
           <td>
             <% if btn_text = attendance_state(day) && day.started_at.present? %>
               <%= link_to "退社", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
@@ -146,8 +146,8 @@
             <% end %>
           </td>
           <td><%= day.note %></td>
-          <td><%= l(day.scheduled_end_time, format: :hour) if day.scheduled_end_time.present? %></td>
-          <td><%= l(day.scheduled_end_time, format: :minute) if day.scheduled_end_time.present? %></td>
+          <td><%= format_hour(day.scheduled_end_time) if (day.scheduled_end_time.present? && day.overtime_application_status == "承認") %></td>
+          <td><%= format_min(day.scheduled_end_time) if day.scheduled_end_time.present? && day.overtime_application_status == "承認" %></td>
           <td>
             <% if day.scheduled_end_time.present? %>
               <%= overtime(@user.designated_work_end_time, day.next_day, day.scheduled_end_time, day.worked_on) %>
