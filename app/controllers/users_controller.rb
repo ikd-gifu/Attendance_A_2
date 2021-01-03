@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   require 'csv'
 
   def index
-    @users = User.paginate(page: params[:page])
+    @users = User.paginate(page: params[:page]).order('id ASC')
   end
 
   #CSVインポート
@@ -74,7 +74,7 @@ class UsersController < ApplicationController
   
   def show
     if current_user.admin?
-      flash[:danger] = '権限がありません'
+      flash[:danger] = '権限がありませんUC'
       redirect_to root_url
     else
       @worked_sum = @attendances.where.not(started_at: nil).count
@@ -121,6 +121,7 @@ class UsersController < ApplicationController
   end
 
   def edit
+    @user = User.find(params[:id])
   end
 
   def update

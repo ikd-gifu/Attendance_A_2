@@ -7,9 +7,14 @@ class AttendancesController < ApplicationController
                                   :edit_affiliation_manager_approval_application]
   before_action :logged_in_user, only: [:update, :edit_one_month, :edit_one_day_overtime_application, :update_one_day_overtime_application, 
                                         :edit_overtime_application_notification, :update_overtime_application_notification,:attendance_modifying_log,
-                                        :edit_affiliation_manager_approval_application]
+                                        :edit_affiliation_manager_approval_application, :affiliation_manager_approval_application_confirmation_show,
+                                        :overtime_application_confirmation_show, :attendance_change_application_confirmation_show]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :set_one_month, only: [:edit_one_month, :edit_one_day_overtime_application]
+  before_action :superior_user, only: [:affiliation_manager_approval_application_confirmation_show, :overtime_application_confirmation_show,
+                                       :attendance_change_application_confirmation_show]
+  before_action :correct_superior_user, only: [:affiliation_manager_approval_application_confirmation_show, :overtime_application_confirmation_show,
+                                               :attendance_change_application_confirmation_show]
 
   UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
 
