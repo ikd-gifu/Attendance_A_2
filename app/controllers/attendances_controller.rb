@@ -60,6 +60,7 @@ class AttendancesController < ApplicationController
                 attendance.note = item[:note]
                 attendance.attendance_change_application_target_superior_id = item[:attendance_change_application_target_superior_id]
                 attendance.attendance_change_application_status = item[:attendance_change_application_status]
+                attendance.change_for_attendance_change = false
                 attendance.update_attributes!(item)
               # end
               # 申請中に変更する場合の処理
@@ -74,6 +75,7 @@ class AttendancesController < ApplicationController
                 attendance.started_at_after_change = item[:started_at_after_change]
                 attendance.finished_at_after_change = item[:finished_at_after_change]
                 attendance.next_day = item[:next_day]
+                attendance.change_for_attendance_change = false
                 attendance.update_attributes!(item)
               elsif attendance.started_at_after_change == item[:started_at_after_change] && attendance.finished_at_after_change == item[:finished_at_after_change]
               end
@@ -141,7 +143,7 @@ class AttendancesController < ApplicationController
     # @user = User.find(params[:id])
     @attendances = Attendance.where(attendance_change_application_target_superior_id: params[:id], attendance_change_application_status: "申請中")
     # @users = User.where(id: @attendances.select(:user_id))
-    @users = User.joins(:attendances).group("users.id").where(attendances:{attendance_change_application_status: "申請中"}).where.not(attendances:{user_id: params[:id]})
+    @users = User.joins(:attendances).group("users.id").where(attendances:{attendance_change_application_status: "申請中"}).where.not(attendances:{user_id: params[:id]}).where(attendances:{attendance_change_application_target_superior_id: params[:id]})
   end
 
   def update_attendance_change_application_notification #勤怠変更のお知らせ
@@ -211,7 +213,7 @@ class AttendancesController < ApplicationController
   def edit_overtime_application_notification #残業申請のお知らせ
     @attendances = Attendance.where(overtime_application_target_superior_id: params[:id], overtime_application_status: "申請中")
     # @users = User.where(id: @attendances.select(:user_id))
-    @users = User.joins(:attendances).group("users.id").where(attendances:{overtime_application_status: "申請中"}).where.not(attendances:{user_id: params[:id]})
+    @users = User.joins(:attendances).group("users.id").where(attendances:{overtime_application_status: "申請中"}).where.not(attendances:{user_id: params[:id]}).where(attendances:{overtime_application_target_superior_id: params[:id]})
   end
   
   def update_overtime_application_notification #残業申請のお知らせ
@@ -282,7 +284,7 @@ class AttendancesController < ApplicationController
   def edit_affiliation_manager_approval_application_notification #所属長承認申請のお知らせ
     @user = User.find(params[:id])
     @attendances = Attendance.where(affiliation_manager_approval_application_target_superior_id: params[:id], affiliation_manager_approval_application_status: "申請中")
-    @users = User.joins(:attendances).group("users.id").where(attendances:{affiliation_manager_approval_application_status: "申請中"}).where.not(attendances:{user_id: params[:id]})
+    @users = User.joins(:attendances).group("users.id").where(attendances:{affiliation_manager_approval_application_status: "申請中"}).where.not(attendances:{user_id: params[:id]}).where(attendances:{affiliation_manager_approval_application_target_superior_id: params[:id]})
   end
 
   def update_affiliation_manager_approval_application_notification #所属長承認申請のお知らせ
