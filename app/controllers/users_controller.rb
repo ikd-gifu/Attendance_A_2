@@ -47,13 +47,13 @@ class UsersController < ApplicationController
       header = ["日付", "出社時間", "退社時間"]
       csv << header
       @attendances.each do |attendance|
-        if attendance.started_at.present? && attendance.finished_at.present?
+        if attendance.started_at.present? && attendance.finished_at.present? && (attendance.overtime_application_status == "承認" || attendance.attendance_change_application_status == "承認" || attendance.affiliation_manager_approval_application_status == "承認")
           values = [
             l(attendance.worked_on, format: :short),
             l(attendance.started_at, format: :time),
             l(attendance.finished_at, format: :time)
           ]
-        elsif attendance.started_at.present? && attendance.finished_at.blank?
+        elsif attendance.started_at.present? && attendance.finished_at.blank? && (attendance.overtime_application_status == "承認" || attendance.attendance_change_application_status == "承認" || attendance.affiliation_manager_approval_application_status == "承認")
           values = [
             l(attendance.worked_on, format: :short),
             l(attendance.started_at, format: :time),
@@ -61,9 +61,9 @@ class UsersController < ApplicationController
           ]
         else
           values = [
-            l(attendance.worked_on, format: :short),
-            attendance.started_at,
-            attendance.finished_at
+            l(attendance.worked_on, format: :short)
+            # attendance.started_at,
+            # attendance.finished_at
           ]
         end
         csv << values

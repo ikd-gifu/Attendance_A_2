@@ -49,7 +49,7 @@ class AttendancesController < ApplicationController
   def update_one_month #勤怠変更申請
     ActiveRecord::Base.transaction do
       attendance_change_application_params.each do |id, item|
-        if item[:attendance_change_application_target_superior_id].present? #"否認"の場合 target_superior_id は nil
+        if item[:attendance_change_application_target_superior_id].present? && ((item[:started_at].present? && item[:finished_at].present?) || (item[:started_at_after_change].present? && item[:finished_at_after_change].present?))#"否認"の場合 target_superior_id は nil
           attendance = Attendance.find(id)
             if attendance.attendance_change_application_status == nil || attendance.attendance_change_application_status == "" || attendance.attendance_change_application_status == "否認" #"なし"含む
               # if item[:started_at] == "" || item[:finished_at] == "" || item[:started_at_after_change] == "" || item[:finished_at_after_change] == ""
@@ -163,6 +163,8 @@ class AttendancesController < ApplicationController
               n1 = n1 + 1
               attendance.started_at = attendance.started_at_after_change
               attendance.finished_at = attendance.finished_at_after_change
+              attendance.started_at_before_change = attendance.started_at
+              attendance.finished_at_before_change = attendance.finished_at
               attendance.update_attributes!(item)
               # if attendance.attendance_change_application_status == "承認" && attendance.attendance_change_application_target_superior_id.present? && attendance.change_for_attendance_change == true
               #   attendance = attendance.dup

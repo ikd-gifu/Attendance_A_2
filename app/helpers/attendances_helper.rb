@@ -9,7 +9,7 @@ module AttendancesHelper
   end
 
   def working_times(start, finish, next_day)
-    if next_day == true
+    if next_day == true && (finish < start)
       format("%.2f", (((finish.floor_to(15.minutes) - start.floor_to(15.minutes)) / 60) / 60.0) + 24)
     else
       format("%.2f", (((finish.floor_to(15.minutes) - start.floor_to(15.minutes)) / 60) / 60.0))
