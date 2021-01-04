@@ -127,7 +127,8 @@ class UsersController < ApplicationController
   def update
     if @user.update_attributes(user_params)
       flash[:success] = "ユーザー情報を更新しました。"
-      redirect_to @user
+      render :edit
+      # redirect_to @user
     else
       render :edit
     end
@@ -162,7 +163,7 @@ class UsersController < ApplicationController
     end
 
     def basic_info_params
-      params.require(:user).permit(:affiliation, :employee_number, :uid, :basic_work_time,
+      params.require(:user).permit(:name, :email, :affiliation, :employee_number, :uid, :basic_work_time,
                                     :designated_work_start_time, :designated_work_end_time)
     end
     
