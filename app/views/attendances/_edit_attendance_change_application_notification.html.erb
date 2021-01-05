@@ -107,7 +107,7 @@
                     <th><%= day.note %></th>
                     <th><%= change_applicant_attendance.select :attendance_change_application_status, [["承認", "承認"],["申請中", "申請中"],["否認", "否認"],["なし", "なし"]], :selected=>"申請中" %></th>
                     <th><%= change_applicant_attendance.check_box :change_for_attendance_change, {}, "true", "false" %></th>
-                    <th><%= link_to "確認", attendances_attendance_change_application_confirmation_show_user_path(user.id, date: day.worked_on), class: "btn btn-primary" %></th>
+                    <th><%= link_to "確認", attendances_attendance_change_application_confirmation_show_user_path(user.id, date: day.worked_on, key: current_user.id), class: "btn btn-primary" %></th>
                   </tr>
                   
                 </tbody>

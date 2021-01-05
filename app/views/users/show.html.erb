@@ -125,15 +125,15 @@
           %>
           <td><%= l(day.worked_on, format: :short) %></td>
           <td class="<%= css_class %>"><%= %w{日 月 火 水 木 金 土}[day.worked_on.wday] %></td>
-          <td><%= format_hour(day.started_at) if day.started_at.present? %></td>
-          <td><%= format_min(day.started_at) if day.started_at.present? %></td>
+          <td><%= format_hour(day.started_at) if day.started_at.present? && (day.attendance_change_application_status == "承認" || day.attendance_change_application_status == "" || day.attendance_change_application_status == nil) %></td>
+          <td><%= format_min(day.started_at) if day.started_at.present? && (day.attendance_change_application_status == "承認" || day.attendance_change_application_status == "" || day.attendance_change_application_status == nil) %></td>
           <td>
             <% if btn_text = attendance_state(day) && !day.started_at.present? %>
               <%= link_to "出社", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
             <% end %>
           </td>
-          <td><%= format_hour(day.finished_at) if day.finished_at.present? %></td>
-          <td><%= format_min(day.finished_at) if day.finished_at.present? %></td>
+          <td><%= format_hour(day.finished_at) if day.finished_at.present? && (day.attendance_change_application_status == "承認" || day.attendance_change_application_status == "" || day.attendance_change_application_status == nil) %></td>
+          <td><%= format_min(day.finished_at) if day.finished_at.present? && (day.attendance_change_application_status == "承認" || day.attendance_change_application_status == "" || day.attendance_change_application_status == nil) %></td>
           <td>
             <% if btn_text = attendance_state(day) && day.started_at.present? %>
               <%= link_to "退社", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
