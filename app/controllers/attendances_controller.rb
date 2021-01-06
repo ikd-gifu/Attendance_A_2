@@ -329,7 +329,7 @@ class AttendancesController < ApplicationController
     @attendance = Attendance.find(params[:id])
     @first_day = params[:date].to_date.beginning_of_month
     @last_day = @first_day.end_of_month
-    @attendances = @user.attendances.where(worked_on: @first_day..@last_day)
+    @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
     @worked_sum = @attendances.where.not(started_at: nil).count
   end
 
@@ -338,7 +338,7 @@ class AttendancesController < ApplicationController
     @attendance = Attendance.find(params[:id])
     @first_day = params[:date].to_date.beginning_of_month
     @last_day = @first_day.end_of_month
-    @attendances = @user.attendances.where(worked_on: @first_day..@last_day)
+    @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
     @worked_sum = @attendances.where.not(started_at: nil).count
   end
   
@@ -347,7 +347,7 @@ class AttendancesController < ApplicationController
     @attendance = Attendance.find(params[:id])
     @first_day = params[:date].to_date.beginning_of_month
     @last_day = @first_day.end_of_month
-    @attendances = @user.attendances.where(worked_on: @first_day..@last_day)
+    @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
     @worked_sum = @attendances.where.not(started_at: nil).count
   end
   
