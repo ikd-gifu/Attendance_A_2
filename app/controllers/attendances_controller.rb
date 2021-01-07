@@ -161,11 +161,29 @@ class AttendancesController < ApplicationController
           attendance = Attendance.find(id) #データベースの中の同じidのattendanceレコードを探してきている
             if item[:attendance_change_application_status] == "承認"
               n1 = n1 + 1
-              attendance.started_at = attendance.started_at_after_change
-              attendance.finished_at = attendance.finished_at_after_change
-              attendance.started_at_before_change = attendance.started_at
-              attendance.finished_at_before_change = attendance.finished_at
-              attendance.update_attributes!(item)
+              if (attendance.finished_at_log == nil && attendance.started_at_log == nil) && (attendance.started_at.present? && attendance.finished_at.present?)
+                attendance.started_at_log = attendance.started_at
+                attendance.finished_at_log = attendance.finished_at
+                attendance.started_at = attendance.started_at_after_change
+                attendance.finished_at = attendance.finished_at_after_change
+                attendance.started_at_before_change = attendance.started_at
+                attendance.finished_at_before_change = attendance.finished_at
+                attendance.update_attributes!(item)
+              elsif attendance.finished_at_log == nil && attendance.started_at_log == nil
+                attendance.finished_at_log = attendance.finished_at_after_change
+                attendance.started_at_log = attendance.started_at_after_change
+                attendance.started_at = attendance.started_at_after_change
+                attendance.finished_at = attendance.finished_at_after_change
+                attendance.started_at_before_change = attendance.started_at
+                attendance.finished_at_before_change = attendance.finished_at
+                attendance.update_attributes!(item)
+              else
+                attendance.started_at = attendance.started_at_after_change
+                attendance.finished_at = attendance.finished_at_after_change
+                attendance.started_at_before_change = attendance.started_at
+                attendance.finished_at_before_change = attendance.finished_at
+                attendance.update_attributes!(item)
+              end
               # if attendance.attendance_change_application_status == "承認" && attendance.attendance_change_application_target_superior_id.present? && attendance.change_for_attendance_change == true
               #   attendance = attendance.dup
               #   attendance.save
