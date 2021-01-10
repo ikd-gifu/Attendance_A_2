@@ -30,15 +30,15 @@
               %>
               <td><%= l(day.worked_on, format: :short) %></td>
               <td class="<%= css_class %>"><%= %w{日 月 火 水 木 金 土}[day.worked_on.wday] %></td>
-                <% if day.started_at_after_change.present? %>
-                  <% if !current_user.admin? && (Date.current < day.worked_on) %>
-                    <td><%= attendance.time_field :started_at_after_change, readonly: true, class: "form-control" %></td>
-                    <td><%= attendance.time_field :finished_at_after_change, readonly: true, class: "form-control" %></td>
-                  <% else %>
-                    <td><%= attendance.time_field :started_at_after_change, class: "form-control" %></td>
-                    <td><%= attendance.time_field :finished_at_after_change, class: "form-control" %></td>
-                  <% end %>
-                <% else %>
+                <!--< % if day.started_at_after_change.present? %>-->
+                  <!--< % if !current_user.admin? && (Date.current < day.worked_on) %>-->
+                  <!--  <td>< %= attendance.time_field :started_at_after_change, readonly: true, class: "form-control" %></td>-->
+                  <!--  <td>< %= attendance.time_field :finished_at_after_change, readonly: true, class: "form-control" %></td>-->
+                  <!--< % else %>-->
+                  <!--  <td>< %= attendance.time_field :started_at_after_change, class: "form-control" %></td>-->
+                  <!--  <td>< %= attendance.time_field :finished_at_after_change, class: "form-control" %></td>-->
+                  <!--< % end %>-->
+                <!--< % else %>-->
                   <% if !current_user.admin? && (Date.current < day.worked_on) %>
                     <td><%= attendance.time_field :started_at, readonly: true, class: "form-control" %></td>
                     <td><%= attendance.time_field :finished_at, readonly: true, class: "form-control" %></td>
@@ -46,7 +46,7 @@
                     <td><%= attendance.time_field :started_at, class: "form-control" %></td>
                     <td><%= attendance.time_field :finished_at, class: "form-control" %></td>
                   <% end %>
-                <% end %>
+                <!--< % end %>-->
               <td>
                 <%= attendance.check_box :"next_day", {}, "true", "false" %>
               </td>

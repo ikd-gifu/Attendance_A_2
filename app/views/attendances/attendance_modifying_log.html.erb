@@ -63,9 +63,9 @@
               %>
               <th><%= l(day.worked_on) %></th>
               <!--<td class="< %= css_class %>">< %= %w{日 月 火 水 木 金 土}[day.worked_on.wday] %></td>-->
-              <% if day.started_at_log.present? && day.finished_at_log.present? %>
-                <th><%= l(day.started_at_log, format: :time) %></th>
-                <th><%= l(day.finished_at_log, format: :time) %></th>
+              <% if day.started_at_before_change.present? && day.finished_at_before_change.present? %>
+                <th><%= l(day.started_at_before_change, format: :time) %></th>
+                <th><%= l(day.finished_at_before_change, format: :time) %></th>
               <% else %>
                 <th></th>
                 <th></th>

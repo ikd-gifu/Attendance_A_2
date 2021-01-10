@@ -140,7 +140,7 @@
             <% end %>
           </td>
           <td>
-            <% if day.started_at.present? && day.finished_at.present? %>
+            <% if day.started_at.present? && day.finished_at.present? && (day.attendance_change_application_status == "承認" || day.attendance_change_application_status == "" || day.attendance_change_application_status == nil) %>
               <%= str_times = working_times(day.started_at, day.finished_at, day.next_day) %>
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
             <% end %>
