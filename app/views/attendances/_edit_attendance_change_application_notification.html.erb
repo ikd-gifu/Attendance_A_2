@@ -65,21 +65,33 @@
                     </th>
                     <td class="<%= css_class %>"><%= %w{日 月 火 水 木 金 土}[day.worked_on.wday] %></td>
                     <th>
+                      <!--< % if day.started_at_before_change.present? %>-->
+                      <!--  < %= l(day.started_at_before_change, format: :hour) %>-->
+                      <!--< % end %>-->
                       <% if day.started_at.present? %>
                         <%= l(day.started_at, format: :hour) %>
                       <% end %>
                     </th>
                     <th>
-                      <% if day.started_at.present? %> <!--#started_at_before_changeではなくstarted_at-->
+                      <!--< % if day.started_at_before_change.present? %>-->
+                      <!--  < %= l(day.started_at_before_change, format: :minute) %>-->
+                      <!--< % end %>-->
+                      <% if day.started_at.present? %>
                         <%= l(day.started_at, format: :minute) %>
                       <% end %>
                     </th>
                     <th>
+                      <!--< % if day.finished_at_before_change.present? %>-->
+                      <!--  < %= l(day.finished_at_before_change, format: :hour) %>-->
+                      <!--< % end %>-->
                       <% if day.finished_at.present? %>
                         <%= l(day.finished_at, format: :hour) %>
                       <% end %>
                     </th>
                     <th>
+                      <!--< % if day.finished_at_before_change.present? %>-->
+                      <!--  < %= l(day.finished_at_before_change, format: :minute) %>-->
+                      <!--< % end %>-->
                       <% if day.finished_at.present? %>
                         <%= l(day.finished_at, format: :minute) %>
                       <% end %>
@@ -88,21 +100,33 @@
                       <% if day.started_at_after_change.present? %>
                         <%= l(day.started_at_after_change, format: :hour) %>
                       <% end %>
+                      <!--< % if day.started_at.present? %>-->
+                      <!--  < %= l(day.started_at, format: :hour) %>-->
+                      <!--< % end %>-->
                     </th>
                     <th>
                       <% if day.started_at_after_change.present? %>
                         <%= l(day.started_at_after_change, format: :minute) %>
                       <% end %>
+                      <!--< % if day.started_at.present? %>-->
+                      <!--  < %= l(day.started_at, format: :minute) %>-->
+                      <!--< % end %>-->
                     </th>
                     <th>
                       <% if day.finished_at_after_change.present? %>
                         <%= l(day.finished_at_after_change, format: :hour) %>
                       <% end %>
+                      <!--< % if day.finished_at.present? %>-->
+                      <!--  < %= l(day.finished_at, format: :hour) %>-->
+                      <!--< % end %>-->
                     </th>
                     <th>
                       <% if day.finished_at_after_change.present? %>
                         <%= l(day.finished_at_after_change, format: :minute) %>
                       <% end %>
+                      <!--< % if day.finished_at.present? %>-->
+                      <!--  < %= l(day.finished_at, format: :minute) %>-->
+                      <!--< % end %>-->
                     </th>
                     <th><%= day.note %></th>
                     <th><%= change_applicant_attendance.select :attendance_change_application_status, [["承認", "承認"],["申請中", "申請中"],["否認", "否認"],["なし", "なし"]], :selected=>"申請中" %></th>

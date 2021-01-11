@@ -23,13 +23,13 @@ class AttendancesController < ApplicationController
     @attendance = Attendance.find(params[:id])
 
     if @attendance.started_at.nil?
-      if @attendance.update_attributes(started_at: Time.current.change(sec: 0), started_at_before_change: Time.current.change(sec: 0))
+      if @attendance.update_attributes(started_at: Time.current.change(sec: 0), started_at_before_change: Time.current.change(sec: 0), started_at_after_change: Time.current.change(sec: 0))
         flash[:info] = "おはようございます！"
       else
         flash[:danger] = UPDATE_ERROR_MSG
       end
     elsif @attendance.finished_at.nil?
-      if @attendance.update_attributes(finished_at: Time.current.change(sec: 0), finished_at_before_change: Time.current.change(sec: 0))
+      if @attendance.update_attributes(finished_at: Time.current.change(sec: 0), finished_at_before_change: Time.current.change(sec: 0), finished_at_after_change: Time.current.change(sec: 0))
         flash[:info] = "お疲れ様でした。"
       else
         flash[:danger] = UPDATE_ERROR_MSG
@@ -49,30 +49,36 @@ class AttendancesController < ApplicationController
   def update_one_month #勤怠変更申請
     ActiveRecord::Base.transaction do
       attendance_change_application_params.each do |id, item|
-        if item[:attendance_change_application_target_superior_id].present? && (item[:started_at].present? && item[:finished_at].present?)#"否認"の場合 target_superior_id は nil
+        if item[:attendance_change_application_target_superior_id].present? && (item[:started_at_after_change].present? && item[:finished_at_after_change].present?)#"否認"の場合 target_superior_id は nil
           attendance = Attendance.find(id)
             if attendance.attendance_change_application_status == nil || attendance.attendance_change_application_status == "" || attendance.attendance_change_application_status == "否認" #"なし"含む
-                attendance.started_at_after_change = item[:started_at]
-                attendance.finished_at_after_change = item[:finished_at]
-                attendance.next_day = item[:next_day]
+                # item[:started_at] = attendance.started_at_after_change
+                # item[:finished_at] = attendance.finished_at_after_change
+                attendance.started_at_after_change = item[:started_at_after_change]
+                attendance.finished_at_after_change = item[:finished_at_after_change]
+                # attendance.started_at = item[:started_at]
+                # attendance.finished_at = item[:finished_at]
+                attendance.next_day_for_attendance_change = item[:next_day_for_attendance_change]
                 attendance.note = item[:note]
                 attendance.attendance_change_application_target_superior_id = item[:attendance_change_application_target_superior_id]
                 attendance.attendance_change_application_status = item[:attendance_change_application_status]
                 attendance.change_for_attendance_change = false
                 attendance.update_attributes!(item)
             elsif attendance.attendance_change_application_status == "申請中" || attendance.attendance_change_application_status == "承認"
-              if item[:started_at] == "" || item[:finished_at] == ""
+              if item[:started_at_after_change] == "" || item[:finished_at_after_change] == ""
                 attendance = false #変更後出社、変更後退社時間のいずれかがない場合は無効
+              # else item[:started_at_after_change] != attendance.started_at_after_change || item[:finished_at_after_change] != attendance.finished_at_after_change
+              # elsif ((attendance.started_at_after_change.hour != item[:started_at_after_change].to_time.hour) || (attendance.started_at_after_change.min != item[:started_at_after_change].to_time.min)) || ((attendance.finished_at_after_change.hour != item[:finished_at_after_change].to_time.hour) || (attendance.finished_at_after_change.min != item[:finished_at_after_change].to_time.min))
               else
-                attendance.started_at_after_change = item[:started_at]
-                attendance.finished_at_after_change = item[:finished_at]
-                attendance.next_day = item[:next_day]
+                attendance.started_at_after_change = item[:started_at_after_change]
+                attendance.finished_at_after_change = item[:finished_at_after_change]
+                attendance.next_day_for_attendance_change = item[:next_day_for_attendance_change]
                 attendance.change_for_attendance_change = false
                 attendance.update_attributes!(item)
               end
             end
-        else item[:attendance_change_application_target_superior_id].blank?
-          if item[:started_at] == "" || item[:finished_at] == ""
+        else item[:attendance_change_application_target_superior_id].blank? || item[:started_at_after_change].blank? || item[:finished_at_after_change].blank?
+          if item[:started_at_after_change] == "" || item[:finished_at_after_change] == ""
             attendance = false
           end
         end
@@ -134,8 +140,10 @@ class AttendancesController < ApplicationController
           attendance = Attendance.find(id) #データベースの中の同じidのattendanceレコードを探してきている
             if item[:attendance_change_application_status] == "承認"
               n1 = n1 + 1
-              item[:started_at] = attendance.started_at_after_change
-              item[:finished_at] = attendance.finished_at_after_change
+              attendance.started_at = attendance.started_at_after_change
+              attendance.finished_at = attendance.finished_at_after_change
+              # attendance.started_at_after_change = item[:started_at]
+              # attendance.finished_at_after_change = item[:finished_at]
               item[:change_for_attendance_change] = "false"
               attendance.update_attributes!(item)
             elsif item[:attendance_change_application_status] == "否認"
@@ -143,7 +151,7 @@ class AttendancesController < ApplicationController
               attendance.started_at_after_change = nil
               attendance.finished_at_after_change = nil
               attendance.note = nil
-              attendance.next_day = false
+              attendance.next_day_for_attendance_change = false
               item[:change_for_attendance_change] = "false"
               attendance.attendance_change_application_target_superior_id = nil
               attendance.update_attributes!(item)
@@ -151,7 +159,7 @@ class AttendancesController < ApplicationController
               n3 = n3 + 1 #"なし"をカウントする為、104行目を含むif文は以下の"なし"の処理より上に持ってくる #以下で申請したattendanceレコードを空にする
               attendance.started_at_after_change = nil
               attendance.finished_at_after_change = nil
-              attendance.next_day = false
+              attendance.next_day_for_attendance_change = false
               attendance.note = nil
               attendance.attendance_change_application_target_superior_id = nil
               item[:attendance_change_application_status] = "" #パラメーターとして飛んできているovertime_application_status、changeも元に戻す
@@ -353,7 +361,7 @@ class AttendancesController < ApplicationController
   private
     #勤怠変更の申請
     def attendance_change_application_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :started_at_after_change, :finished_at_after_change, :note, :next_day, :attendance_change_application_target_superior_id, :attendance_change_application_status])[:attendances]
+      params.require(:user).permit(attendances: [:started_at, :finished_at, :started_at_after_change, :finished_at_after_change, :note, :next_day_for_attendance_change, :attendance_change_application_target_superior_id, :attendance_change_application_status])[:attendances]
     end
 
     #勤怠変更申請のお知らせ
