@@ -298,7 +298,7 @@ class AttendancesController < ApplicationController
 
   def attendance_change_application_confirmation_show #勤怠変更申請の確認リンク
     @user = User.find(params[:id])
-    @attendance = Attendance.find(params[:id])
+    # @attendance = Attendance.find(params[:id])
     @first_day = params[:date].to_date.beginning_of_month
     @last_day = @first_day.end_of_month
     @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
