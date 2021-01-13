@@ -303,6 +303,10 @@ class AttendancesController < ApplicationController
     @last_day = @first_day.end_of_month
     @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
     @worked_sum = @attendances.where.not(started_at: nil).count
+    unless @attendances.where(attendance_change_application_target_superior_id: current_user.id).present? 
+      flash[:danger] = "申請された上長のみアクセスできます。"
+      redirect_to root_url and return
+    end
   end
 
   def overtime_application_confirmation_show #残業の確認リンク
@@ -312,6 +316,10 @@ class AttendancesController < ApplicationController
     @last_day = @first_day.end_of_month
     @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
     @worked_sum = @attendances.where.not(started_at: nil).count
+    unless @attendances.where(overtime_application_target_superior_id: current_user.id).present? 
+      flash[:danger] = "申請された上長のみアクセスできます。"
+      redirect_to root_url and return
+    end
   end
   
   def affiliation_manager_approval_application_confirmation_show #所属長承認申請の確認リンク
@@ -321,6 +329,10 @@ class AttendancesController < ApplicationController
     @last_day = @first_day.end_of_month
     @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
     @worked_sum = @attendances.where.not(started_at: nil).count
+    unless @attendances.where(affiliation_manager_approval_application_target_superior_id: current_user.id).present? 
+      flash[:danger] = "申請された上長のみアクセスできます。"
+      redirect_to root_url and return
+    end
   end
   
   def attendance_modifying_log #勤怠修正ログ

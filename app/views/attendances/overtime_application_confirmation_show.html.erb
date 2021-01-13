@@ -136,7 +136,7 @@
           </td>
           <td><%= day.business_process_content %></td>
           <td>
-            <% if day.overtime_application_status.present? %>
+            <% if day.overtime_application_status.present? && day.overtime_application_target_superior_id == current_user.id %>
               <% if day.overtime_application_status == "申請中" %>
                 <%= "#{User.find(day.overtime_application_target_superior_id).name}に残業#{day.overtime_application_status}" %>
               <% elsif day.overtime_application_status == "承認" %>

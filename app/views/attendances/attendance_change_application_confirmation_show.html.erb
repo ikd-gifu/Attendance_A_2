@@ -92,7 +92,7 @@
           </td>
           <td><%= day.business_process_content %></td>
           <td>
-            <% if day.attendance_change_application_status.present? %>
+            <% if day.attendance_change_application_status.present? && day.attendance_change_application_target_superior_id == current_user.id %>
               <% if day.attendance_change_application_status == "申請中" %>
                 <%= "#{User.find(day.attendance_change_application_target_superior_id).name}に勤怠変更#{day.attendance_change_application_status}" %>
               <% elsif day.attendance_change_application_status == "承認" %>
